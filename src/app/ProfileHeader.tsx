@@ -6,7 +6,7 @@ import Image from "next/image";
 export const ProfileHeader: React.FC = () => {
   return (
     <header className="grid grid-cols-[min-content_auto] grid-rows-1 items-center px-6 py-2.5 w-full bg-white max-md:px-5 sticky top-0 border-b-1 border-gray-200 z-10">
-      <div className="relative flex size-18 lg:size-28">
+      <div className="relative flex size-18">
         <Image
           src="/image001-1.jpg"
           fill={true}
@@ -19,7 +19,7 @@ export const ProfileHeader: React.FC = () => {
       </figure> */}
 
       <div className="grid grid-cols-1 grid-rows-[auto_min-content] w-fit justify-self-center">
-        <div className="z-0 pb-3.5 my-auto text-5xl text-neutral-700 justify-center flex">
+        <div className="z-0 pb-3.5 my-auto text-4xl text-neutral-700 justify-center flex">
           JAKOB KUSNICK
         </div>
 

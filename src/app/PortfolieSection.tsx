@@ -1,31 +1,7 @@
 "use client";
 import * as React from "react";
-import { TableEntry } from "./types";
-import {
-  BookOpenIcon,
-  PresentationChartLineIcon,
-} from "@heroicons/react/24/outline";
 
 import Image from "next/image";
-
-const interests: TableEntry[] = [
-  { text: "Data Visualization" },
-  { text: "Narrative Visualization" },
-  { text: "Visual Data Science" },
-  { text: "Digital Humanities" },
-  { text: "Cultural Heritage" },
-  { text: "Information Retrieval" },
-  { text: "Life Sciences" },
-];
-
-const skills: TableEntry[] = [
-  { text: "JavaScript, Python, PHP, Java, C, C++" },
-  { text: "HTML, CSS, React, Django" },
-  { text: "Custom Visualizations via d3.js, threejs, Mapbox GL JS, Plotly" },
-  { text: "Collaborative Work in Research & Development Projects" },
-  { text: "German (native), English (advanced)" },
-  { text: "French (basic), Danish (basic)" },
-];
 
 const entries = [
   {
@@ -75,21 +51,27 @@ export const PortfolieSection: React.FC = () => {
         {entries.map((e, i) => {
           return (
             <div key={`portfolia-${i}`}>
-              <div className="grid grid-cols-[70%_30%] w-full gap-3 items-start">
+              <div className="grid grid-cols-[70%_30%] grid-rows-[1fr] w-full gap-3 items-start">
                 {/* Image Container */}
-                <div className="relative h-full max-h-full gap-2 flex overflow-hidden">
+                <div className="relative w-full h-full max-h-full gap-2 flex overflow-hidden items-start">
                   {e.images.map((img, img_i) => {
                     return (
-                      <Image
-                        key={`imgage-${img_i}`}
-                        src={img}
-                        width={0}
-                        height={0}
-                        sizes="0%"
-                        className="w-auto h-auto max-h-[200px] object-cover cursor-zoom-in hover:animate-pulse"
-                        alt={e.caption}
-                        onClick={() => setSelectedImage(img)}
-                      />
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <div key={`imgage-${img_i}`} className="relative h-full">
+                        <Image
+                          src={img}
+                          width={1000}
+                          height={500}
+                          style={{
+                            width: "auto",
+                            height: "100%",
+                            maxHeight: "400px",
+                          }}
+                          className="object-contain max-h-full max-w-full cursor-zoom-in hover:animate-pulse"
+                          alt={e.caption}
+                          onClick={() => setSelectedImage(img)}
+                        />
+                      </div>
                     );
                   })}
                 </div>
@@ -120,14 +102,12 @@ export const PortfolieSection: React.FC = () => {
           className="fixed inset-0 bg-[#000000ba] bg-opacity-80 flex items-center justify-center p-4 z-50"
           onClick={() => setSelectedImage(null)}
         >
-          <div className="relative max-w-4xl mx-auto">
+          <div className="relative max-w-4xl w-[90vw] h-[90vh]">
             <Image
               src={selectedImage}
-              width={0}
+              fill={true}
               alt="Fullscreen"
-              height={0}
-              sizes="100%"
-              className="w-[90vw] h-auto rounded-lg shadow-lg"
+              className="rounded-lg shadow-lg object-contain"
             />
           </div>
         </div>
