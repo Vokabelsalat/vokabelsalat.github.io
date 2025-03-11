@@ -42,7 +42,7 @@ const entries = [
 ];
 
 export const PortfolieSection: React.FC = () => {
-  const [selectedImage, setSelectedImage] = React.useState(null);
+  const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
 
   return (
     <div className="flex flex-col bg-neutral-100 text-neutral-700 px-6 py-2.5 text-xs">
