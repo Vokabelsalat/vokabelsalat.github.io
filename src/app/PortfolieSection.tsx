@@ -53,11 +53,14 @@ export const PortfolieSection: React.FC = () => {
             <div key={`portfolia-${i}`}>
               <div className="flex w-full gap-3 items-start">
                 {/* Image Container */}
-                <div className="relative w-full h-full max-h-full gap-2 flex overflow-hidden items-center">
+                <div className="relative w-full h-full max-h-full gap-2 flex overflow-hidden items-start">
                   {e.images.map((img, img_i) => {
                     return (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <div key={`imgage-${img_i}`} className="relative h-full">
+                      <div
+                        key={`imgage-${img_i}`}
+                        className="relative max-h-[400px] flex items-start"
+                      >
                         <Image
                           src={img}
                           width={1000}
