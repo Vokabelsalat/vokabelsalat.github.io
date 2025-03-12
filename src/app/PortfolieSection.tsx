@@ -51,9 +51,9 @@ export const PortfolieSection: React.FC = () => {
         {entries.map((e, i) => {
           return (
             <div key={`portfolia-${i}`}>
-              <div className="grid grid-cols-[70%_30%] grid-rows-[1fr] w-full gap-3 items-start">
+              <div className="flex w-full gap-3 items-start">
                 {/* Image Container */}
-                <div className="relative w-full h-full max-h-full gap-2 flex overflow-hidden items-start">
+                <div className="relative w-full h-full max-h-full gap-2 flex overflow-hidden items-center">
                   {e.images.map((img, img_i) => {
                     return (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -76,7 +76,8 @@ export const PortfolieSection: React.FC = () => {
                   })}
                 </div>
                 {/* Text Container */}
-                <div className="flex flex-col overflow-hidden">
+
+                <div className="flex flex-col overflow-hidden w-fit">
                   <div className="font-bold mb-1">{e.title}</div>
                   <div className="mb-1">{e.caption}</div>
                   {e.links?.map((link, i) => {
