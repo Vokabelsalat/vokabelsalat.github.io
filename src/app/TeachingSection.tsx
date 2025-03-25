@@ -27,8 +27,9 @@ const teachings: Position[] = [
   {
     title: "Teaching Assistant in Comparative Literature",
     institution: "University of Southern Denmark",
-    location: "Leipzig, Germany",
+    location: "Odense, Denmark",
     period: "Feb. 2022 – Mar. 2022",
+    details: ["Hosted by Prof. Sofie Kluge"],
   },
   {
     title: "Teaching Assistant in Visualizations for Data Science",
