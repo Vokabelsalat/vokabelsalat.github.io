@@ -33,7 +33,7 @@ const teachings: Position[] = [
     institution: "University of Southern Denmark",
     location: "Leipzig, Germany",
     period: "Feb. 2018 – Jul. 2020",
-    details: ["Hosten by Prof. Josef Focht"],
+    details: ["Hosted by Prof. Josef Focht"],
     link: "https://mfm.uni-leipzig.de/dt/Forschung/Tastenprojekt.php",
   },
 ];
