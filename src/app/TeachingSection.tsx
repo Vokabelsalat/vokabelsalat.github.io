@@ -22,7 +22,10 @@ const teachings: Position[] = [
     institution: "University of Southern Denmark",
     location: "Odense, Denmark",
     period: "Oct. 2022 – Dec. 2022",
-    details: ["Hosted by Prof. Stefan Jänicke"],
+    details: [
+      "Hosted by Prof. Stefan Jänicke",
+      "Co-supervised ~110 students with 3 resulting co-authored conference papers",
+    ],
   },
   {
     title: "Teaching Assistant in Comparative Literature",
@@ -36,7 +39,10 @@ const teachings: Position[] = [
     institution: "University of Southern Denmark",
     location: "Odense, Denmark",
     period: "Oct. 2021 – Dec. 2021",
-    details: ["Hosted by Prof. Stefan Jänicke"],
+    details: [
+      "Hosted by Prof. Stefan Jänicke",
+      "Co-supervised ~100 students with 3 resulting co-authored conference papers",
+    ],
   },
   {
     title: "Teaching Assistant in Digital Humanities",
