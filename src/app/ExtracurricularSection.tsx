@@ -4,60 +4,28 @@ import { Position } from "./types";
 
 const teachings: Position[] = [
   {
-    title: "Guest Lecturing in Web-Development",
+    title: "Student Volunteer Chair EuroVis Conference 2024",
     institution: "University of Southern Denmark",
     location: "Odense, Denmark",
-    period: "Mar. 2025",
-    details: ["Hosted by Prof. Tariq Yousef"],
+    period: "May 2024",
+    details: ["Supervised ~30 student volunteers for a week"],
   },
   {
-    title: "Teaching Assistant in Introduction to Digital Humanities",
-    institution: "New York University Abu Dhabi",
-    location: "Abu Dhabi, United Arab Emirates",
-    period: "Sep. 2023",
-    details: ["Hosted by Prof. David Wrisley"],
-  },
-  {
-    title: "Teaching Assistant in Visualizations for Data Science",
+    title: "Board member of Philos network",
     institution: "University of Southern Denmark",
     location: "Odense, Denmark",
-    period: "Oct. 2022 – Dec. 2022",
+    period: "Sep. 2021 - Jan. 2024",
     details: [
-      "Hosted by Prof. Stefan Jänicke",
-      "Co-supervised ~110 students with 3 resulting co-authored conference papers",
+      "Organizing scientific and social events for PhD students at the Faculty of Science",
     ],
-  },
-  {
-    title: "Teaching Assistant in Comparative Literature",
-    institution: "University of Southern Denmark",
-    location: "Odense, Denmark",
-    period: "Feb. 2022 – Mar. 2022",
-    details: ["Hosted by Prof. Sofie Kluge"],
-  },
-  {
-    title: "Teaching Assistant in Visualizations for Data Science",
-    institution: "University of Southern Denmark",
-    location: "Odense, Denmark",
-    period: "Oct. 2021 – Dec. 2021",
-    details: [
-      "Hosted by Prof. Stefan Jänicke",
-      "Co-supervised ~100 students with 3 resulting co-authored conference papers",
-    ],
-  },
-  {
-    title: "Teaching Assistant in Digital Humanities",
-    institution: "University of Southern Denmark",
-    location: "Odense, Denmark",
-    period: "Sep. 2021 – Dec. 2021",
-    details: ["Hosted by Prof. Stefan Jänicke"],
   },
 ];
 
-export const TeachingSection: React.FC = () => {
+export const ExtracurricularSection: React.FC = () => {
   return (
     <section className="flex overflow-hidden flex-col px-6 py-2.5 w-full bg-white text-neutral-700 max-md:px-5 max-md:max-w-full">
       <h2 className="gap-2.5 self-start text-lg font-[Montserrat]">
-        Teaching Experience
+        Extracurricular Activities
       </h2>
       <div className="w-full text-xs max-md:max-w-full">
         {teachings.map((teaching, index) => (

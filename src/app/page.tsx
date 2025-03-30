@@ -17,6 +17,7 @@ import "@fontsource/montserrat/400-italic.css"; // Specify weight and style
 import { JSX } from "react";
 import { PortfolieSection } from "./PortfolieSection";
 import { ProejctSection } from "./ProjectSection";
+import { ExtracurricularSection } from "./ExtracurricularSection";
 
 export default function Page(): JSX.Element {
   return (
@@ -30,6 +31,7 @@ export default function Page(): JSX.Element {
           <InterestsSkillsSection />
           <PublicationsSection />
           <ProejctSection />
+          <ExtracurricularSection />
           <PortfolieSection />
         </div>
       </article>

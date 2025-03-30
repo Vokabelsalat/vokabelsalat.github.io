@@ -45,7 +45,7 @@ export const PortfolieSection: React.FC = () => {
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
 
   return (
-    <div className="flex flex-col bg-white text-neutral-700 px-6 py-2.5 text-xs">
+    <div className="flex flex-col bg-neutral-100 text-neutral-700 px-6 py-2.5 text-xs">
       <h2 className="self-start text-lg font-[Montserrat] mb-3">Portfolio</h2>
       <div className="flex flex-col gap-6.5">
         {entries.map((e, i) => {
