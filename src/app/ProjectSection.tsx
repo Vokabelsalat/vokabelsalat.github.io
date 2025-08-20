@@ -5,6 +5,14 @@ import Link from "next/link";
 
 const teachings: Position[] = [
   {
+    title: "AlgaeProBANOS",
+    institution: "University of Southern Denmark",
+    location: "Odense, Denmark",
+    period: "Jul. 2025 - now",
+    details: ["Hosted by Prof. Tariq Yousef"],
+    link: "https://algaeprobanos.eu",
+  },
+  {
     title: "MEMORISE",
     institution: "University of Southern Denmark",
     location: "Odense, Denmark",

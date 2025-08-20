@@ -8,7 +8,7 @@ const positions: Position[] = [
     institution: "University of Southern Denmark",
     location: "Odense, Denmark",
     period: "Oct. 2024 – Present",
-    details: ["Hosted by Prof. Stefan Jänicke"],
+    details: ["Hosted by Prof. Stefan Jänicke & Prof. Tariq Yousef"],
   },
   {
     title: "Ph.D. in Computer Science",
