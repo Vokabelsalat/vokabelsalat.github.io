@@ -25,7 +25,7 @@ const teachings: Position[] = [
     institution: "University of Southern Denmark",
     location: "Odense, Denmark",
     period: "Nov. 2019 - now",
-    link: "https://www.vises.sdu.dk",
+    link: "https://vises.sdu.dk",
   },
   {
     title:
