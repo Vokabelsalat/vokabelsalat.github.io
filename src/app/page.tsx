@@ -6,6 +6,7 @@ import { InterestsSkillsSection } from "./InterestsSkillsSection";
 import { PublicationsSection } from "./PublicationsSection";
 import { ProfileHeader } from "./ProfileHeader";
 import { PositionsSection } from "./PositionsSection";
+import { WorkshopSection } from "./WorkshopSection";
 
 import "@fontsource/open-sans"; // Defaults to weight 400
 import "@fontsource/open-sans/400.css"; // Specify weight
@@ -32,6 +33,7 @@ export default function Page(): JSX.Element {
           <PublicationsSection />
           <ProejctSection />
           <ExtracurricularSection />
+          <WorkshopSection />
           <PortfolieSection />
         </div>
       </article>
