@@ -49,7 +49,7 @@ const workshops: Workshop[] = [
       "Half-Day Workshop",
       "Part of the 'Digital Humanities im deutschsprachigen Raum' Conference, 13-17 Mar. 2023, Belval, Luxembourg",
     ],
-    link: "https://intavia.eu/activities/smashing-the-silos-the-future-of-cultural-heritage-information-and-visualization/",
+    link: "http://dhd2023.dig-hum.de/",
   },
   // Johannes Liem, Jakob Kusnick, Steffan Jänicke, Carina Doppler, Markus Passecker, Eva Mayr, Florian Windhager Data Driven Storytelling zu kulturellen Objekten und Biographien 14.3.2023 Luxemburg
 ];
