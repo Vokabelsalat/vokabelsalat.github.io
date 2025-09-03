@@ -18,6 +18,19 @@ const workshops: Workshop[] = [
     link: "https://reframe.sussex.ac.uk/digitalholocaustmemory/connective-holocaust-commemoration-expo-i/",
   },
   {
+    title:
+      "Visualization-Based Storytelling in Holocaust Education: The Integration of Testimonies, Art, and Technology",
+    institution: "George Mason University",
+    authors: "J. Kusnick",
+    location: "Arlington, VA, United States",
+    date: "7. Aug. 2024",
+    details: [
+      "Poster",
+      "Part of the Digital Humanities Conference 2024, 6.-9. Aug. 2024",
+    ],
+    link: "/DHWashingtonPoster.png",
+  },
+  {
     title: "Working with the InTaVia Platform",
     institution: "There’s History in All Men’s Lives",
     authors: "S. Beck, and J. Kusnick",
