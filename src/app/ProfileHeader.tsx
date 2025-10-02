@@ -20,7 +20,7 @@ export const ProfileHeader: React.FC = () => {
 
       <div className="grid grid-cols-1 grid-rows-[auto_min-content] w-fit justify-self-center">
         <div className="z-0 pb-3.5 my-auto text-4xl text-neutral-700 justify-center flex">
-          JAKOB KUSNICK
+          DR. JAKOB KUSNICK
         </div>
 
         <div className="flex w-full justify-between gap-3">
