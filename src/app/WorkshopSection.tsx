@@ -5,6 +5,14 @@ import Link from "next/link";
 
 const workshops: Workshop[] = [
   {
+    title: "Guest Lecture on Narrative Visualizations",
+    institution: "York University",
+    authors: "J. Kusnik",
+    location: "Toronto, Canada",
+    date: "1. Oct. 2025",
+    details: ["Hosted by Prof. Lora Appel"],
+  },
+  {
     title:
       "Teaching Difficult History with Digital Tools: Telling the Story of Nazi Euthanasia",
     institution: "University of Sussex",

@@ -10,7 +10,7 @@ export interface Position {
 export interface Workshop {
   title: string;
   institution: string;
-  authors: string;
+  authors?: string;
   location: string;
   date: string;
   details?: string[];
