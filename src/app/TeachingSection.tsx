@@ -2,13 +2,91 @@
 import * as React from "react";
 import { Position } from "./types";
 
-const teachings: Position[] = [
+export const teachings: Position[] = [
+  //   {
+  //     title: "Guest Lecturing in Web-Development",
+  //     institution: "University of Southern Denmark",
+  //     location: "Odense, Denmark",
+  //     period: "Mar. 2025",
+  //     details: ["Hosted by Prof. Tariq Yousef"],
+  //   },
+  //   {
+  //     title: "Teaching Assistant in Introduction to Digital Humanities",
+  //     institution: "New York University Abu Dhabi",
+  //     location: "Abu Dhabi, United Arab Emirates",
+  //     period: "Sep. 2023",
+  //     details: ["Hosted by Prof. David Wrisley"],
+  //   },
+  //   {
+  //     title: "Teaching Assistant in Visualizations for Data Science",
+  //     institution: "University of Southern Denmark",
+  //     location: "Odense, Denmark",
+  //     period: "Oct. 2022 – Dec. 2022",
+  //     details: [
+  //       "Hosted by Prof. Stefan Jänicke",
+  //       "Co-supervised ~110 students with 3 resulting co-authored conference papers",
+  //     ],
+  //   },
+  //   {
+  //     title: "Teaching Assistant in Comparative Literature",
+  //     institution: "University of Southern Denmark",
+  //     location: "Odense, Denmark",
+  //     period: "Feb. 2022 – Mar. 2022",
+  //     details: ["Hosted by Prof. Sofie Kluge"],
+  //   },
+  //   {
+  //     title: "Teaching Assistant in Visualizations for Data Science",
+  //     institution: "University of Southern Denmark",
+  //     location: "Odense, Denmark",
+  //     period: "Oct. 2021 – Dec. 2021",
+  //     details: [
+  //       "Hosted by Prof. Stefan Jänicke",
+  //       "Co-supervised ~100 students with 3 resulting co-authored conference papers",
+  //     ],
+  //   },
+  //   {
+  //     title: "Teaching Assistant in Digital Humanities",
+  //     institution: "University of Southern Denmark",
+  //     location: "Odense, Denmark",
+  //     period: "Sep. 2021 – Dec. 2021",
+  //     details: ["Hosted by Prof. Stefan Jänicke"],
+  //   },
+  {
+    title: "Guest Lecture on Narrative Visualizations",
+    institution: "University of Southern Denmark",
+    location: "Odense, Denmark",
+    period: "13. Nov. 2024",
+    details: ["Hosted by Prof. Stefan Jänicke"],
+    type: "point",
+    start: new Date("2024-11-15"),
+  },
+  {
+    title: "Guest Lecture on Narrative Visualizations",
+    institution: "York University",
+    location: "Toronto, Canada",
+    period: "1. Oct. 2025",
+    details: ["Hosted by Prof. Lora Appel"],
+    type: "point",
+    start: new Date("2025-10-01"),
+  },
   {
     title: "Guest Lecturing in Web-Development",
     institution: "University of Southern Denmark",
     location: "Odense, Denmark",
     period: "Mar. 2025",
     details: ["Hosted by Prof. Tariq Yousef"],
+    type: "range",
+    start: new Date("2025-03-01"),
+    end: new Date("2025-03-30"),
+  },
+  {
+    title: "Guest Lecture on Narrative Visualizations",
+    institution: "University of Southern Denmark",
+    location: "Odense, Denmark",
+    period: "6. Nov. 2024",
+    details: ["Hosted by Prof. Stefan Jänicke"],
+    type: "point",
+    start: new Date("2024-11-06"),
   },
   {
     title: "Teaching Assistant in Introduction to Digital Humanities",
@@ -16,6 +94,9 @@ const teachings: Position[] = [
     location: "Abu Dhabi, United Arab Emirates",
     period: "Sep. 2023",
     details: ["Hosted by Prof. David Wrisley"],
+    type: "range",
+    start: new Date("2023-09-01"),
+    end: new Date("2023-09-30"),
   },
   {
     title: "Teaching Assistant in Visualizations for Data Science",
@@ -26,6 +107,9 @@ const teachings: Position[] = [
       "Hosted by Prof. Stefan Jänicke",
       "Co-supervised ~110 students with 3 resulting co-authored conference papers",
     ],
+    type: "range",
+    start: new Date("2022-10-01"),
+    end: new Date("2022-12-31"),
   },
   {
     title: "Teaching Assistant in Comparative Literature",
@@ -33,6 +117,9 @@ const teachings: Position[] = [
     location: "Odense, Denmark",
     period: "Feb. 2022 – Mar. 2022",
     details: ["Hosted by Prof. Sofie Kluge"],
+    type: "range",
+    start: new Date("2022-02-01"),
+    end: new Date("2022-03-31"),
   },
   {
     title: "Teaching Assistant in Visualizations for Data Science",
@@ -43,6 +130,9 @@ const teachings: Position[] = [
       "Hosted by Prof. Stefan Jänicke",
       "Co-supervised ~100 students with 3 resulting co-authored conference papers",
     ],
+    type: "range",
+    start: new Date("2021-10-01"),
+    end: new Date("2021-12-31"),
   },
   {
     title: "Teaching Assistant in Digital Humanities",
@@ -50,6 +140,9 @@ const teachings: Position[] = [
     location: "Odense, Denmark",
     period: "Sep. 2021 – Dec. 2021",
     details: ["Hosted by Prof. Stefan Jänicke"],
+    type: "range",
+    start: new Date("2021-09-01"),
+    end: new Date("2021-12-31"),
   },
 ];
 

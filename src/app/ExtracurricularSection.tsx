@@ -2,7 +2,7 @@
 import * as React from "react";
 import { Position } from "./types";
 
-const teachings: Position[] = [
+export const extras: Position[] = [
   {
     title: "Student Volunteer Chair EuroVis Conference 2024",
     institution: "University of Southern Denmark",
@@ -23,22 +23,22 @@ const teachings: Position[] = [
 
 export const ExtracurricularSection: React.FC = () => {
   return (
-    <section className="flex overflow-hidden flex-col px-6 py-2.5 w-full bg-white text-neutral-700 max-md:px-5 max-md:max-w-full">
+    <section className="flex overflow-hidden flex-col px-6 py-2.5 w-full text-neutral-700 max-md:px-5 max-md:max-w-full">
       <h2 className="gap-2.5 self-start text-lg font-[Montserrat]">
         Extracurricular Activities
       </h2>
       <div className="w-full text-xs max-md:max-w-full">
-        {teachings.map((teaching, index) => (
+        {extras.map((extra, index) => (
           <article key={index} className="py-2 w-full max-md:max-w-full">
             <div className="flex overflow-hidden flex-wrap gap-10 justify-between items-start w-full min-h-4 max-md:max-w-full">
-              <h3 className="font-bold">{teaching.title}</h3>
-              <p>{teaching.period}</p>
+              <h3 className="font-bold">{extra.title}</h3>
+              <p>{extra.period}</p>
             </div>
             <div className="flex overflow-hidden flex-wrap gap-10 justify-between items-start w-full max-md:max-w-full mt-1">
-              <p>{teaching.institution}</p>
-              <p>{teaching.location}</p>
+              <p>{extra.institution}</p>
+              <p>{extra.location}</p>
             </div>
-            {teaching.details?.map((detail, detailIndex) => (
+            {extra.details?.map((detail, detailIndex) => (
               <p
                 key={detailIndex}
                 className="overflow-hidden w-full max-md:max-w-full italic mt-0.5"

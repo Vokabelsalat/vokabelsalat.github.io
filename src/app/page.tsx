@@ -1,24 +1,62 @@
 "use client";
-import * as React from "react";
 import { BiographySection } from "./BiographySection";
-import { TeachingSection } from "./TeachingSection";
 import { InterestsSkillsSection } from "./InterestsSkillsSection";
-import { PublicationsSection } from "./PublicationsSection";
+import { positions, PositionsSection } from "./PositionsSection";
 import { ProfileHeader } from "./ProfileHeader";
-import { PositionsSection } from "./PositionsSection";
-import { WorkshopSection } from "./WorkshopSection";
+import { PublicationsSection } from "./PublicationsSection";
+import { teachings, TeachingSection } from "./TeachingSection";
+import { workshops, WorkshopSection } from "./WorkshopSection";
 
 import "@fontsource/open-sans"; // Defaults to weight 400
-import "@fontsource/open-sans/400.css"; // Specify weight
 import "@fontsource/open-sans/400-italic.css"; // Specify weight and style
+import "@fontsource/open-sans/400.css"; // Specify weight
 
 import "@fontsource/montserrat"; // Defaults to weight 400
-import "@fontsource/montserrat/400.css"; // Specify weight
 import "@fontsource/montserrat/400-italic.css"; // Specify weight and style
+import "@fontsource/montserrat/400.css"; // Specify weight
 import { JSX } from "react";
-import { PortfolieSection } from "./PortfolieSection";
-import { ProejctSection } from "./ProjectSection";
-import { ExtracurricularSection } from "./ExtracurricularSection";
+import EventClusterMap from "./EventClusterMap";
+import MultiRowTimeline from "./EventTimeline";
+import { ExtracurricularSection, extras } from "./ExtracurricularSection";
+import { cityCoordinates } from "./locations";
+import { ProjectSection } from "./ProjectSection";
+import { EventTypeColors, MyEvent } from "./types";
+import { PortfolioSection } from "./PortfolioSection";
+
+const allEvents: Array<MyEvent> = [
+  ...positions.map((e) => {
+    return {
+      title: e.title,
+      coordinates: cityCoordinates[e.location],
+      location: e.location,
+      type: "Position",
+    };
+  }),
+  ...teachings.map((e) => {
+    return {
+      title: e.title,
+      coordinates: cityCoordinates[e.location],
+      location: e.location,
+      type: "Teaching",
+    };
+  }),
+  ...extras.map((e) => {
+    return {
+      title: e.title,
+      coordinates: cityCoordinates[e.location],
+      location: e.location,
+      type: "Position",
+    };
+  }),
+  ...workshops.map((e) => {
+    return {
+      title: e.title,
+      coordinates: cityCoordinates[e.location],
+      location: e.location,
+      type: "Workshop",
+    };
+  }),
+];
 
 export default function Page(): JSX.Element {
   return (
@@ -27,14 +65,48 @@ export default function Page(): JSX.Element {
         <ProfileHeader />
         <div className="relative">
           <BiographySection />
+          <section>
+            <div className="w-full h-48">
+              <EventClusterMap events={allEvents} />
+            </div>
+            <div className="w-full h-48">
+              {/* <EventTimeline events={allEvents} /> */}
+              <MultiRowTimeline
+                categories={[
+                  {
+                    id: "position",
+                    label: "Position",
+                    color: EventTypeColors["Position"], // optional, per-category default
+                    items: positions,
+                  },
+                  {
+                    id: "teaching",
+                    label: "Teaching",
+                    color: EventTypeColors["Teaching"], // optional, per-category default
+                    items: teachings,
+                  },
+                  {
+                    id: "workshop",
+                    label: "Workshops",
+                    color: EventTypeColors["Workshop"], // optional, per-category default
+                    items: workshops,
+                  },
+                ]}
+                domainPaddingDays={10}
+                rowHeight={30}
+                tickEvery={"month"}
+                onItemClick={(item) => console.log(item)}
+              />
+            </div>
+          </section>
           <PositionsSection />
-          <TeachingSection />
           <InterestsSkillsSection />
+          <TeachingSection />
           <PublicationsSection />
-          <ProejctSection />
+          <ProjectSection />
           <ExtracurricularSection />
           <WorkshopSection />
-          <PortfolieSection />
+          <PortfolioSection />
         </div>
       </article>
     </main>

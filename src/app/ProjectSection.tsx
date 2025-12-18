@@ -5,6 +5,14 @@ import Link from "next/link";
 
 const teachings: Position[] = [
   {
+    title: "LEAD AI",
+    institution: "University of Bergen",
+    location: "Bergen, Norway",
+    period: "Jan. 2026 - now",
+    details: ["Hosted by Prof. Jill Walker Rettberg & Prof. Nick Montfort"],
+    link: "https://www.uib.no/en/leadai",
+  },
+  {
     title: "AlgaeProBANOS",
     institution: "University of Southern Denmark",
     location: "Odense, Denmark",
@@ -46,9 +54,9 @@ const teachings: Position[] = [
   },
 ];
 
-export const ProejctSection: React.FC = () => {
+export const ProjectSection: React.FC = () => {
   return (
-    <section className="flex overflow-hidden flex-col px-6 py-2.5 w-full bg-neutral-100 text-neutral-700 max-md:px-5 max-md:max-w-full">
+    <section className="flex overflow-hidden flex-col px-6 py-2.5 w-full text-neutral-700 max-md:px-5 max-md:max-w-full">
       <h2 className="gap-2.5 self-start text-lg font-[Montserrat]">Projects</h2>
       <div className="w-full text-xs max-md:max-w-full">
         {teachings.map((teaching, index) => (

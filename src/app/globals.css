@@ -28,3 +28,7 @@ body {
 nextjs-portal {
   display: none;
 }
+
+section:nth-child(even) {
+  background-color: #f5f5f5;
+}

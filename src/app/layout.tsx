@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="text-[3vw] md:text-[clamp(10px,_2vw,_22px)]">
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />;
+        <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
