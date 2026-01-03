@@ -9,6 +9,9 @@ export const extras: Position[] = [
     location: "Odense, Denmark",
     period: "May 2024",
     details: ["Supervised ~30 student volunteers for a week"],
+    type: "range",
+    start: new Date("2024-05-01"),
+    end: new Date("2024-05-31"),
   },
   {
     title: "Board member of Philos network",
@@ -18,6 +21,9 @@ export const extras: Position[] = [
     details: [
       "Organizing scientific and social events for PhD students at the Faculty of Science",
     ],
+    type: "range",
+    start: new Date("2021-09-01"),
+    end: new Date("2024-02-01"),
   },
 ];
 

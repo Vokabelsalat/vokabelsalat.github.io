@@ -20,7 +20,7 @@ import MultiRowTimeline from "./EventTimeline";
 import { ExtracurricularSection, extras } from "./ExtracurricularSection";
 import { cityCoordinates } from "./locations";
 import { ProjectSection } from "./ProjectSection";
-import { EventTypeColors, MyEvent } from "./types";
+import { EventType, EventTypeColors, MyEvent } from "./types";
 import { PortfolioSection } from "./PortfolioSection";
 
 const allEvents: Array<MyEvent> = [
@@ -29,7 +29,7 @@ const allEvents: Array<MyEvent> = [
       title: e.title,
       coordinates: cityCoordinates[e.location],
       location: e.location,
-      type: "Position",
+      type: "Position" as EventType,
     };
   }),
   ...teachings.map((e) => {
@@ -37,7 +37,7 @@ const allEvents: Array<MyEvent> = [
       title: e.title,
       coordinates: cityCoordinates[e.location],
       location: e.location,
-      type: "Teaching",
+      type: "Teaching" as EventType,
     };
   }),
   ...extras.map((e) => {
@@ -45,7 +45,7 @@ const allEvents: Array<MyEvent> = [
       title: e.title,
       coordinates: cityCoordinates[e.location],
       location: e.location,
-      type: "Position",
+      type: "Position" as EventType,
     };
   }),
   ...workshops.map((e) => {
@@ -53,7 +53,7 @@ const allEvents: Array<MyEvent> = [
       title: e.title,
       coordinates: cityCoordinates[e.location],
       location: e.location,
-      type: "Workshop",
+      type: "Workshop" as EventType,
     };
   }),
 ];
@@ -77,19 +77,31 @@ export default function Page(): JSX.Element {
                     id: "position",
                     label: "Position",
                     color: EventTypeColors["Position"], // optional, per-category default
-                    items: positions,
+                    items: positions.map((position, index) => ({
+                      ...position,
+                      id: `position-${index}`, // Assign a unique id
+                      end: position.end || new Date(), // Ensure end is always a Date
+                    })),
                   },
                   {
                     id: "teaching",
                     label: "Teaching",
                     color: EventTypeColors["Teaching"], // optional, per-category default
-                    items: teachings,
+                    items: teachings.map((teaching, index) => ({
+                      ...teaching,
+                      id: `teaching-${index}`, // Assign a unique id
+                      end: teaching.end || new Date(), // Ensure end is always a Date
+                    })),
                   },
                   {
                     id: "workshop",
                     label: "Workshops",
                     color: EventTypeColors["Workshop"], // optional, per-category default
-                    items: workshops,
+                    items: workshops.map((teaching, index) => ({
+                      ...teaching,
+                      id: `teaching-${index}`, // Assign a unique id
+                      end: teaching.end || new Date(), // Ensure end is always a Date
+                    })),
                   },
                 ]}
                 domainPaddingDays={10}

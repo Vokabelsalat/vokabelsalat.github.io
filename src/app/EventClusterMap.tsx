@@ -3,9 +3,13 @@ import "maplibre-gl/dist/maplibre-gl.css"; // See notes below
 import type { MapRef } from "@vis.gl/react-maplibre";
 import { Layer, Map, Source } from "@vis.gl/react-maplibre";
 import { JSX, useMemo, useRef, useState } from "react";
-import { EventTypeColors, MyEvent } from "./types";
+import { EventType, EventTypeColors, MyEvent } from "./types";
 
-const getBoundsForPoints = (points) => {
+interface MyGeometry {
+  coordinates: { lat: number; lon: number };
+}
+
+const getBoundsForPoints = (points: Array<MyGeometry>) => {
   // Calculate corner values of bounds
   const pointsLong = points
     .filter((point) => point.coordinates != null)
@@ -26,13 +30,18 @@ export default function EventClusterMap(props: {
   events: Array<MyEvent>;
 }): JSX.Element {
   const mapRef = useRef<MapRef>(null);
-  const [isClustering, setIsClustering] = useState(true);
+  const [isClustering] = useState(true);
 
   const { events } = props;
 
   const [mapMarkers, eventTypes] = useMemo(() => {
     const markers = [];
-    const types: Record<MyEvent["type"], number> = {};
+    const types: Record<MyEvent["type"], number> = {
+      Position: 0,
+      Workshop: 0,
+      Publication: 0,
+      Teaching: 0,
+    };
     for (const event of events) {
       if (Object.keys(types).includes(event.type)) {
         types[event.type] = types[event.type] + 1;
@@ -41,8 +50,8 @@ export default function EventClusterMap(props: {
       }
 
       if (event.coordinates) {
-        const newMarker = {
-          type: "Feature",
+        const newMarker: GeoJSON.Feature<GeoJSON.Point, MyEvent> = {
+          type: "Feature" as const,
           properties: { ...event },
           geometry: {
             type: "Point",
@@ -71,11 +80,13 @@ export default function EventClusterMap(props: {
       style={{ width: "100%", height: "100%", position: "relative" }}
       mapStyle="https://api.maptiler.com/maps/019864da-bd1a-77a6-8cb4-b2fb2323302f/style.json?key=JryEbN305oNyHUvClr79"
       onLoad={() => {
-        mapRef.current?.fitBounds(getBoundsForPoints(events), {
-          padding: { top: 40, bottom: 40, left: 10, right: 10 },
-        });
+        mapRef.current?.fitBounds(
+          getBoundsForPoints(events) as maplibregl.LngLatBoundsLike,
+          {
+            padding: { top: 40, bottom: 40, left: 10, right: 10 },
+          }
+        );
       }}
-      onClick={(e) => {}}
       interactiveLayerIds={["country-fill"]}
     >
       <Source
@@ -168,7 +179,7 @@ export default function EventClusterMap(props: {
             >
               <div
                 className="size-1 rounded-full"
-                style={{ backgroundColor: EventTypeColors[type] }}
+                style={{ backgroundColor: EventTypeColors[type as EventType] }}
               />
               {type}
             </div>

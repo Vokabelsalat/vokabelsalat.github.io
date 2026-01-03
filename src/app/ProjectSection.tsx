@@ -11,6 +11,9 @@ const teachings: Position[] = [
     period: "Jan. 2026 - now",
     details: ["Hosted by Prof. Jill Walker Rettberg & Prof. Nick Montfort"],
     link: "https://www.uib.no/en/leadai",
+    type: "range",
+    start: new Date(2026, 0, 1),
+    end: new Date(),
   },
   {
     title: "AlgaeProBANOS",
@@ -19,6 +22,9 @@ const teachings: Position[] = [
     period: "Jul. 2025 - now",
     details: ["Hosted by Prof. Tariq Yousef"],
     link: "https://algaeprobanos.eu",
+    type: "range",
+    start: new Date(2025, 6, 1),
+    end: new Date(),
   },
   {
     title: "MEMORISE",
@@ -27,6 +33,9 @@ const teachings: Position[] = [
     period: "Nov. 2023 - now",
     details: ["Hosted by Prof. Stefan Jänicke"],
     link: "https://memorise.sdu.dk",
+    type: "range",
+    start: new Date(2023, 10, 1),
+    end: new Date(),
   },
   {
     title: "MusEcology",
@@ -34,6 +43,9 @@ const teachings: Position[] = [
     location: "Odense, Denmark",
     period: "Nov. 2019 - now",
     link: "https://vises.sdu.dk",
+    type: "range",
+    start: new Date(2019, 10, 1),
+    end: new Date(),
   },
   {
     title:
@@ -43,6 +55,9 @@ const teachings: Position[] = [
     period: "Oct. 2020 – Oct. 2023",
     details: ["Hosted by Prof. Stefan Jänicke"],
     link: "https://intavia.eu",
+    type: "range",
+    start: new Date(2020, 9, 1),
+    end: new Date(2023, 9, 1),
   },
   {
     title: "TASTEN",
@@ -51,6 +66,9 @@ const teachings: Position[] = [
     period: "Feb. 2018 – Jul. 2020",
     details: ["Hosted by Prof. Josef Focht"],
     link: "https://mfm.uni-leipzig.de/dt/Forschung/Tastenprojekt.php",
+    type: "range",
+    start: new Date(2018, 1, 1),
+    end: new Date(2020, 6, 1),
   },
 ];
 

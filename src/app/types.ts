@@ -15,8 +15,8 @@ export const EventTypeColors : Record<EventType, string> = {
 }
 
 export interface Event {
-  type: 'point' | 'range';
-  start: Date;
+  type?: 'point' | 'range';
+  start?: Date;
   end?: Date;
 }
 

@@ -54,15 +54,15 @@ import * as d3 from "d3";
 
 export type TimelineEvent = {
   id: string;
-  type: "range" | "point";
-  start: Date;
-  end: Date;
+  type?: "range" | "point";
+  start?: Date;
+  end?: Date;
   label?: string;
   color?: string; // optional per-item color
   tooltip?: string;
 };
 
-export type TimelineItem = TimelineEvent | TimelineRange;
+export type TimelineItem = TimelineEvent;
 
 export type TimelineCategory = {
   id: string;
@@ -101,15 +101,13 @@ export type MultiRowTimelineProps = {
   className?: string;
 };
 
-function isRange(i: TimelineItem): i is TimelineRange {
+function isRange(i: TimelineItem) {
   return i.type === "range";
 }
 
 const DEFAULT_MARGINS = { top: 28, right: 16, bottom: 28, left: 16 };
 
-const useResizeObserver = (
-  ref: React.RefObject<HTMLElement | SVGSVGElement>
-) => {
+const useResizeObserver = (ref: React.RefObject<HTMLDivElement | null>) => {
   const [bounds, setBounds] = useState<{
     width: number;
     height: number;
@@ -135,10 +133,12 @@ const getAllDatesExtent = (
   const dates: Date[] = [];
   categories.forEach((cat) => {
     cat.items.forEach((item) => {
-      if (isRange(item)) {
-        dates.push(item.start, item.end);
-      } else {
-        dates.push(item.start);
+      if (item.start != null) {
+        if (item.end != null) {
+          dates.push(item.start, item.end);
+        } else {
+          dates.push(item.start);
+        }
       }
     });
   });
@@ -160,15 +160,15 @@ const ticksFor = (scale: d3.ScaleTime<number, number>, every: TickEvery) => {
   }
   switch (every) {
     case "year":
-      return scale.ticks(d3.timeYear.every(1));
+      return scale.ticks(d3.timeYear);
     case "quarter":
-      return scale.ticks(d3.timeMonth.every(3));
+      return scale.ticks(d3.timeMonth.every(3)!);
     case "month":
-      return scale.ticks(d3.timeMonth.every(1));
+      return scale.ticks(d3.timeMonth);
     case "week":
-      return scale.ticks(d3.timeWeek.every(1));
+      return scale.ticks(d3.timeWeek);
     case "day":
-      return scale.ticks(d3.timeDay.every(1));
+      return scale.ticks(d3.timeDay);
     default:
       return scale.ticks();
   }
@@ -191,7 +191,6 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
   labelWidth = 140,
   margins = DEFAULT_MARGINS,
   dotRadius = 5,
-  rangeRadius = 6,
   tickEvery = "month",
   tickFormat,
   onItemClick,
@@ -249,12 +248,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
     visible: boolean;
   }>({ x: 0, y: 0, html: "", visible: false });
 
-  const handleMouse = (
-    e: React.MouseEvent,
-    item: TimelineItem,
-    cat: TimelineCategory
-  ) => {
-    const target = e.currentTarget as SVGElement;
+  const handleMouse = (e: React.MouseEvent, item: TimelineItem) => {
     const svg = svgRef.current;
     if (!svg) return;
     const pt = svg.createSVGPoint();
@@ -270,17 +264,17 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
       sy = loc.y;
     }
     const title =
-      item.title ??
-      (isRange(item)
+      item.label ??
+      (item.start != null && item.end != null && isRange(item)
         ? `${d3.timeFormat("%b %d, %Y")(item.start)} – ${d3.timeFormat(
             "%b %d, %Y"
           )(item.end)}`
-        : d3.timeFormat("%b %d, %Y")(item.start));
+        : d3.timeFormat("%b %d, %Y")(item.start as Date));
     const detail = isRange(item)
-      ? `${d3.timeFormat("%b %d, %Y")(item.start)} – ${d3.timeFormat(
+      ? `${d3.timeFormat("%b %d, %Y")(item.start as Date)} – ${d3.timeFormat(
           "%b %d, %Y"
-        )(item.end)}`
-      : `${d3.timeFormat("%b %d, %Y")(item.start)}`;
+        )(item.end as Date)}`
+      : `${d3.timeFormat("%b %d, %Y")(item.start as Date)}`;
 
     const html = `<div class="text-sm"><div class="font-medium">${title}</div><div class="text-xs opacity-80">${detail}</div><div class="mt-1">${
       item.tooltip ?? ""
@@ -395,14 +389,14 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
 
                     {/* Ranges first, then points on top */}
                     {cat.items.filter(isRange).map((item, i) => {
-                      const x1 = x(item.start);
-                      const x2 = x(item.end);
+                      const x1 = x(item.start as Date);
+                      const x2 = x(item.end as Date);
                       const w = Math.max(2, x2 - x1);
                       return (
                         <g
                           key={`timeline-event-${i}`}
                           className="cursor-pointer"
-                          onMouseMove={(e) => handleMouse(e, item, cat)}
+                          onMouseMove={(e) => handleMouse(e, item)}
                           onMouseLeave={hideTooltip}
                         >
                           <foreignObject
@@ -426,7 +420,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                               onClick={() => onItemClick?.(item, cat)}
                             >
                               {w > 40 && (
-                                <div className="px-1">{item.title}</div>
+                                <div className="px-1">{item.label}</div>
                               )}
                             </div>
                           </foreignObject>
@@ -437,7 +431,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                     {cat.items
                       .filter((i) => !isRange(i))
                       .map((item, i) => {
-                        const cx = x((item as TimelineEvent).start);
+                        const cx = x((item as TimelineEvent).start as Date);
                         return (
                           <g
                             key={`timeline-circle-${i}`}
@@ -449,12 +443,12 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                               r={dotRadius}
                               fill={item.color ?? cat.color ?? "#334155"}
                               onMouseMove={(e) =>
-                                handleMouse(e, item as TimelineEvent, cat)
+                                handleMouse(e, item as TimelineEvent)
                               }
                               onMouseLeave={hideTooltip}
                               onClick={() => onItemClick?.(item, cat)}
                             />
-                            {item.title && (
+                            {item.label && (
                               <text
                                 x={cx + dotRadius + 4}
                                 y={rowHeight / 2 + 4}
