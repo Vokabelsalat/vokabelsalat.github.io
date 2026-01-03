@@ -37,7 +37,7 @@ export const positions: Position[] = [
     institution: "University of Bergen",
     location: "Bergen, Norway",
     period: "Jan. 2026 – Present",
-    details: ["Hosted by Prof. Jill Walker Rettberg & Prof. Nick Montfort"],
+    details: ["Hosted by Prof. Nick Montfort"],
     type: "range",
     start: new Date("2026-01-01"),
     end: new Date(), // ongoing

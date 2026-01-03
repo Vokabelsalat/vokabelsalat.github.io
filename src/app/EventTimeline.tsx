@@ -249,6 +249,8 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
   }>({ x: 0, y: 0, html: "", visible: false });
 
   const handleMouse = (e: React.MouseEvent, item: TimelineItem) => {
+    console.log("Hover", item);
+
     const svg = svgRef.current;
     if (!svg) return;
     const pt = svg.createSVGPoint();
@@ -276,7 +278,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
         )(item.end as Date)}`
       : `${d3.timeFormat("%b %d, %Y")(item.start as Date)}`;
 
-    const html = `<div class="text-sm"><div class="font-medium">${title}</div><div class="text-xs opacity-80">${detail}</div><div class="mt-1">${
+    const html = `<div><div class="font-medium">${title}</div><div class="opacity-80">${detail}</div><div class="mt-1">${
       item.tooltip ?? ""
     }</div></div>`;
     setTooltip({ x: sx + 10, y: sy - 10, html, visible: true });
@@ -469,8 +471,14 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
           {/* Tooltip */}
           {tooltip.visible && (
             <div
+              id="tooltip-wrapper"
               className="pointer-events-none absolute rounded-lg border bg-white p-2 shadow-md z-50"
-              style={{ left: tooltip.x, top: tooltip.y, maxWidth: 280 }}
+              style={{
+                left: tooltip.x,
+                top: tooltip.y,
+                maxWidth: 280,
+                fontSize: "small",
+              }}
               dangerouslySetInnerHTML={{ __html: tooltip.html }}
             />
           )}

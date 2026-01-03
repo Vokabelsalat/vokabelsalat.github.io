@@ -79,6 +79,7 @@ export default function Page(): JSX.Element {
                     color: EventTypeColors["Position"], // optional, per-category default
                     items: positions.map((position, index) => ({
                       ...position,
+                      label: position.title,
                       id: `position-${index}`, // Assign a unique id
                       end: position.end || new Date(), // Ensure end is always a Date
                     })),
@@ -89,6 +90,7 @@ export default function Page(): JSX.Element {
                     color: EventTypeColors["Teaching"], // optional, per-category default
                     items: teachings.map((teaching, index) => ({
                       ...teaching,
+                      label: teaching.title,
                       id: `teaching-${index}`, // Assign a unique id
                       end: teaching.end || new Date(), // Ensure end is always a Date
                     })),
@@ -99,6 +101,7 @@ export default function Page(): JSX.Element {
                     color: EventTypeColors["Workshop"], // optional, per-category default
                     items: workshops.map((teaching, index) => ({
                       ...teaching,
+                      label: teaching.title,
                       id: `teaching-${index}`, // Assign a unique id
                       end: teaching.end || new Date(), // Ensure end is always a Date
                     })),
