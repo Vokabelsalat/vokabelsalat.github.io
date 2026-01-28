@@ -128,7 +128,7 @@ const useResizeObserver = (ref: React.RefObject<HTMLDivElement | null>) => {
 };
 
 const getAllDatesExtent = (
-  categories: TimelineCategory[]
+  categories: TimelineCategory[],
 ): [Date, Date] | null => {
   const dates: Date[] = [];
   categories.forEach((cat) => {
@@ -249,8 +249,6 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
   }>({ x: 0, y: 0, html: "", visible: false });
 
   const handleMouse = (e: React.MouseEvent, item: TimelineItem) => {
-    console.log("Hover", item);
-
     const svg = svgRef.current;
     if (!svg) return;
     const pt = svg.createSVGPoint();
@@ -269,12 +267,12 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
       item.label ??
       (item.start != null && item.end != null && isRange(item)
         ? `${d3.timeFormat("%b %d, %Y")(item.start)} – ${d3.timeFormat(
-            "%b %d, %Y"
+            "%b %d, %Y",
           )(item.end)}`
         : d3.timeFormat("%b %d, %Y")(item.start as Date));
     const detail = isRange(item)
       ? `${d3.timeFormat("%b %d, %Y")(item.start as Date)} – ${d3.timeFormat(
-          "%b %d, %Y"
+          "%b %d, %Y",
         )(item.end as Date)}`
       : `${d3.timeFormat("%b %d, %Y")(item.start as Date)}`;
 
@@ -292,7 +290,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
 
   const innerWidth = Math.max(
     0,
-    width - labelWidth - margins.left - margins.right
+    width - labelWidth - margins.left - margins.right,
   );
 
   return (

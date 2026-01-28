@@ -9,7 +9,7 @@ const teachings: Position[] = [
     institution: "University of Bergen",
     location: "Bergen, Norway",
     period: "Jan. 2026 - now",
-    details: ["Hosted by Prof. Jill Walker Rettberg & Prof. Nick Montfort"],
+    details: ["Hosted by Prof. Nick Montfort"],
     link: "https://www.uib.no/en/leadai",
     type: "range",
     start: new Date(2026, 0, 1),

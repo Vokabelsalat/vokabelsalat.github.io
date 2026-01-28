@@ -14,7 +14,7 @@ import "@fontsource/open-sans/400.css"; // Specify weight
 import "@fontsource/montserrat"; // Defaults to weight 400
 import "@fontsource/montserrat/400-italic.css"; // Specify weight and style
 import "@fontsource/montserrat/400.css"; // Specify weight
-import { JSX } from "react";
+import { JSX, useMemo } from "react";
 import EventClusterMap from "./EventClusterMap";
 import MultiRowTimeline from "./EventTimeline";
 import { ExtracurricularSection, extras } from "./ExtracurricularSection";
@@ -59,6 +59,44 @@ const allEvents: Array<MyEvent> = [
 ];
 
 export default function Page(): JSX.Element {
+  const categories = useMemo(() => {
+    return [
+      {
+        id: "position",
+        label: "Position",
+        color: EventTypeColors["Position"], // optional, per-category default
+        items: positions.map((position, index) => ({
+          ...position,
+          label: position.title,
+          id: `position-${index}`, // Assign a unique id
+          end: position.end || new Date(), // Ensure end is always a Date
+        })),
+      },
+      {
+        id: "teaching",
+        label: "Teaching",
+        color: EventTypeColors["Teaching"], // optional, per-category default
+        items: teachings.map((teaching, index) => ({
+          ...teaching,
+          label: teaching.title,
+          id: `teaching-${index}`, // Assign a unique id
+          end: teaching.end || new Date(), // Ensure end is always a Date
+        })),
+      },
+      {
+        id: "workshop",
+        label: "Workshop",
+        color: EventTypeColors["Workshop"], // optional, per-category default
+        items: workshops.map((teaching, index) => ({
+          ...teaching,
+          label: teaching.title,
+          id: `teaching-${index}`, // Assign a unique id
+          end: teaching.end || new Date(), // Ensure end is always a Date
+        })),
+      },
+    ];
+  }, []);
+
   return (
     <main className="flex items-center pt-4 bg-white justify-center">
       <article className="max-w-3xl flex-1 shrink pb-4 w-full basis-0 relative">
@@ -67,46 +105,12 @@ export default function Page(): JSX.Element {
           <BiographySection />
           <section>
             <div className="w-full h-48">
-              <EventClusterMap events={allEvents} />
+              <EventClusterMap events={allEvents} categories={categories} />
             </div>
             <div className="w-full h-48">
               {/* <EventTimeline events={allEvents} /> */}
               <MultiRowTimeline
-                categories={[
-                  {
-                    id: "position",
-                    label: "Position",
-                    color: EventTypeColors["Position"], // optional, per-category default
-                    items: positions.map((position, index) => ({
-                      ...position,
-                      label: position.title,
-                      id: `position-${index}`, // Assign a unique id
-                      end: position.end || new Date(), // Ensure end is always a Date
-                    })),
-                  },
-                  {
-                    id: "teaching",
-                    label: "Teaching",
-                    color: EventTypeColors["Teaching"], // optional, per-category default
-                    items: teachings.map((teaching, index) => ({
-                      ...teaching,
-                      label: teaching.title,
-                      id: `teaching-${index}`, // Assign a unique id
-                      end: teaching.end || new Date(), // Ensure end is always a Date
-                    })),
-                  },
-                  {
-                    id: "workshop",
-                    label: "Workshops",
-                    color: EventTypeColors["Workshop"], // optional, per-category default
-                    items: workshops.map((teaching, index) => ({
-                      ...teaching,
-                      label: teaching.title,
-                      id: `teaching-${index}`, // Assign a unique id
-                      end: teaching.end || new Date(), // Ensure end is always a Date
-                    })),
-                  },
-                ]}
+                categories={categories}
                 domainPaddingDays={10}
                 rowHeight={30}
                 tickEvery={"month"}

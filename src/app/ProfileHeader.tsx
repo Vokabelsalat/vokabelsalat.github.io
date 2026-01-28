@@ -32,12 +32,12 @@ export const ProfileHeader: React.FC = () => {
             kusnick@imada.sdu.dk
           </a>
           <a
-            href="https://www.google.dk/maps/@55.3713664,10.4267776,12z?entry=ttu&g_ep=EgoyMDI1MDMwNC4wIKXMDSoASAFQAw%3D%3D"
+            href="https://maps.app.goo.gl/pTdtsDBQTR4Wkpoe7"
             target="_blank"
             className="flex items-center gap-1 text-xs text-blue-400"
           >
             <HomeIcon className="size-4" />
-            Odense, Denmark
+            Bergen, Norway
           </a>
           <div className="flex items-center gap-1 text-xs text-blue-400">
             <PhoneIcon className="size-4" />
