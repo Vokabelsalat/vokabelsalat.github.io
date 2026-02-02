@@ -200,6 +200,15 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
   const svgRef = useRef<SVGSVGElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const bounds = useResizeObserver(wrapperRef);
+  
+  // Zoom state: zoom level and pan offset
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [panOffset, setPanOffset] = useState(0);
+  
+  // Drag state for panning
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStartX, setDragStartX] = useState(0);
+  const [dragStartPanOffset, setDragStartPanOffset] = useState(0);
 
   // Dimensions
   const width = bounds?.width ?? 800;
@@ -209,8 +218,8 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
     return inner + margins.top + margins.bottom;
   }, [categories.length, rowHeight, margins.bottom, margins.top]);
 
-  // Domain
-  const xDomain: [Date, Date] = useMemo(() => {
+  // Base domain (before zoom)
+  const baseDomain: [Date, Date] = useMemo(() => {
     if (domain) return domain;
     const ext = getAllDatesExtent(categories);
     if (!ext) {
@@ -223,6 +232,20 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
     const paddedMax = addDays(max, domainPaddingDays);
     return [paddedMin, paddedMax];
   }, [categories, domain, domainPaddingDays]);
+
+  // Apply zoom to domain
+  const xDomain: [Date, Date] = useMemo(() => {
+    const [baseMin, baseMax] = baseDomain;
+    const baseSpan = baseMax.getTime() - baseMin.getTime();
+    const zoomedSpan = baseSpan / zoomLevel;
+    
+    // Center point with pan offset
+    const centerTime = baseMin.getTime() + baseSpan / 2 + panOffset;
+    
+    const min = new Date(centerTime - zoomedSpan / 2);
+    const max = new Date(centerTime + zoomedSpan / 2);
+    return [min, max];
+  }, [baseDomain, zoomLevel, panOffset]);
 
   // Scale
   const x = useMemo(() => {
@@ -284,6 +307,53 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
 
   const hideTooltip = () => setTooltip((t) => ({ ...t, visible: false }));
 
+  // Attach wheel listener with passive: false to allow preventDefault
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+
+    const wheelHandler = (e: WheelEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const svg = svgRef.current;
+      if (!svg) return;
+
+      // Get mouse position relative to the chart area
+      const rect = svg.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left - labelWidth - margins.left;
+
+      // Convert mouse position to time domain
+      const mouseTime = x.invert(mouseX);
+      const [baseMin, baseMax] = baseDomain;
+      const baseSpan = baseMax.getTime() - baseMin.getTime();
+
+      // Calculate zoom delta (negative deltaY = zoom in)
+      const zoomDelta = e.deltaY > 0 ? 0.9 : 1.1;
+      const newZoomLevel = Math.max(0.5, Math.min(50, zoomLevel * zoomDelta));
+
+      // Calculate the mouse position ratio in current domain
+      const [currentMin, currentMax] = xDomain;
+      const currentSpan = currentMax.getTime() - currentMin.getTime();
+      const mouseRatioInDomain =
+        (mouseTime.getTime() - currentMin.getTime()) / currentSpan;
+
+      // Calculate new pan offset to keep mouse position stable
+      const newSpan = baseSpan / newZoomLevel;
+      const centerTime = baseMin.getTime() + baseSpan / 2;
+      const desiredMouseTime = mouseTime.getTime();
+      const newDomainMin = desiredMouseTime - newSpan * mouseRatioInDomain;
+      const newCenter = newDomainMin + newSpan / 2;
+      const newPanOffset = newCenter - centerTime;
+
+      setZoomLevel(newZoomLevel);
+      setPanOffset(newPanOffset);
+    };
+
+    wrapper.addEventListener("wheel", wheelHandler, { passive: false });
+    return () => wrapper.removeEventListener("wheel", wheelHandler);
+  }, [x, baseDomain, xDomain, zoomLevel, labelWidth, margins.left]);
+
   // Row helpers
   const rowY = (rowIndex: number) =>
     margins.top + rowIndex * (rowHeight + RowGutter);
@@ -293,11 +363,63 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
     width - labelWidth - margins.left - margins.right,
   );
 
+  // Handle wheel zoom
+  const handleWheelDummy = () => {
+    // Wheel handling is now done via useEffect with passive: false
+  };
+
+  // Handle drag to pan
+  const handleMouseDown = (e: React.MouseEvent) => {
+    // Only initiate drag on left mouse button
+    if (e.button !== 0) return;
+    
+    const svg = svgRef.current;
+    if (!svg) return;
+    
+    setIsDragging(true);
+    setDragStartX(e.clientX);
+    setDragStartPanOffset(panOffset);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    
+    const svg = svgRef.current;
+    if (!svg) return;
+    
+    // Calculate pixel delta
+    const deltaX = e.clientX - dragStartX;
+    
+    // Convert pixel delta to time delta based on current scale
+    const [currentMin, currentMax] = xDomain;
+    const currentSpan = currentMax.getTime() - currentMin.getTime();
+    const pixelToTime = currentSpan / innerWidth;
+    const timeDelta = -deltaX * pixelToTime; // Negative for natural drag direction
+    
+    setPanOffset(dragStartPanOffset + timeDelta);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
+
   return (
-    <div ref={wrapperRef} className={"w-full " + (className ?? "")}>
+    <div 
+      ref={wrapperRef} 
+      className={"w-full " + (className ?? "")}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
+      style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+    >
       {" "}
       {/* outer responsive container */}
-      <div className="shadow-sm">
+      <div className="shadow-sm select-none">
         {/* Header axis */}
         <div className="px-4 pt-3">
           <div className="relative over overflow-hidden">
@@ -354,28 +476,6 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
               const y = rowY(rowIdx);
               return (
                 <g key={`${cat}-${rowIdx}`} transform={`translate(0, ${y})`}>
-                  {/* Row label */}
-                  <g transform={`translate(0, 0)`}>
-                    <foreignObject
-                      x={0}
-                      y={-2}
-                      width={labelWidth}
-                      height={rowHeight}
-                    >
-                      <div className="h-full flex items-center justify-start pr-3">
-                        <div className="flex items-center gap-2 text-xs font-medium text-gray-800">
-                          <span
-                            className="inline-block w-3 h-3 rounded"
-                            style={{ backgroundColor: cat.color ?? "#64748b" }}
-                          />
-                          <span className="truncate" title={cat.label}>
-                            {cat.label}
-                          </span>
-                        </div>
-                      </div>
-                    </foreignObject>
-                  </g>
-
                   {/* Items lane */}
                   <g transform={`translate(${labelWidth + margins.left}, 0)`}>
                     {/* Baseline */}
@@ -406,14 +506,13 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                             height={ItemHeight}
                           >
                             <div
-                              className="rounded-md flex items-center text-white text-nowrap overflow-ellipsis"
+                              className="rounded-md flex items-center text-white text-nowrap overflow-ellipsis opacity-50 hover:opacity-100"
                               style={{
                                 width: w,
                                 maxWidth: w,
                                 maxHeight: ItemHeight,
                                 height: ItemHeight,
                                 fontSize: "small",
-                                opacity: 0.5,
                                 backgroundColor:
                                   item.color ?? cat.color ?? "#94a3b833",
                               }}
@@ -461,6 +560,27 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                         );
                       })}
                   </g>
+                  {/* Row label */}
+                  <g transform={`translate(0, 0)`}>
+                    <foreignObject
+                      x={0}
+                      y={-2}
+                      width={labelWidth}
+                      height={rowHeight}
+                    >
+                      <div className="h-full flex items-center justify-start pr-3 bg-gray-100">
+                        <div className="flex items-center gap-2 text-xs font-medium text-gray-800">
+                          <span
+                            className="inline-block w-3 h-3 rounded"
+                            style={{ backgroundColor: cat.color ?? "#64748b" }}
+                          />
+                          <span className="truncate" title={cat.label}>
+                            {cat.label}
+                          </span>
+                        </div>
+                      </div>
+                    </foreignObject>
+                  </g>
                 </g>
               );
             })}
@@ -470,7 +590,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
           {tooltip.visible && (
             <div
               id="tooltip-wrapper"
-              className="pointer-events-none absolute rounded-lg border bg-white p-2 shadow-md z-50"
+              className="pointer-events-none absolute rounded-lg border bg-white p-2 shadow-md z-50 select-none"
               style={{
                 left: tooltip.x,
                 top: tooltip.y,

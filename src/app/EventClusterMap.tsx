@@ -335,7 +335,7 @@ export default function EventClusterMap(props: {
         />
         {donutClusterMarkers}
       </Source>
-      <div className="absolute top-1 right-1 p-2 shadow-md rounded-md flex flex-col bg-white/50">
+      <div className="absolute top-1 right-1 p-1 shadow-md rounded-md flex flex-col bg-white/50">
         <b>Legend</b>
         {Object.keys(eventTypes).map((type, i) => {
           return (
