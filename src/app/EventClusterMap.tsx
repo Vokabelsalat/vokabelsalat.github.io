@@ -3,6 +3,7 @@ import "maplibre-gl/dist/maplibre-gl.css"; // See notes below
 import type { MapRef } from "@vis.gl/react-maplibre";
 import { Layer, Map, Marker, Source } from "@vis.gl/react-maplibre";
 import { JSX, useCallback, useMemo, useRef, useState } from "react";
+import { Category } from "./page";
 import { EventType, EventTypeColors, MyEvent } from "./types";
 
 interface MyGeometry {
@@ -10,18 +11,19 @@ interface MyGeometry {
 }
 
 function createDonutChart(
-  props,
-  dataKeys,
-  colors,
-  onMouseEnter,
-  onMouseLeave,
-  id,
+  props: Record<string, object>,
+  dataKeys: Array<string>,
+  colors: Record<string, unknown>,
+  onMouseEnter: () => void,
+  onMouseLeave: () => void,
+  id: string,
 ) {
-  const offsets = [];
+  console.log("PROPS", props);
+  const offsets : Array<number> = [];
 
   const grouped = Object.fromEntries(
-    Object.entries(props).filter(([key, val]) => dataKeys.includes(key)),
-  );
+    Object.entries(props).filter(([key, val]) => { return dataKeys.includes(key) && typeof val === "number"; })
+  ) as unknown as Record<string, number>;
 
   const sortedGroupedKeys = Object.keys(grouped).sort().reverse();
 
@@ -35,13 +37,13 @@ function createDonutChart(
     return <></>;
   }
 
-  const fontSize =
-    total >= 1000 ? 22 : total >= 100 ? 20 : total >= 10 ? 18 : 16;
+  // const fontSize =
+  //   total >= 1000 ? 22 : total >= 100 ? 20 : total >= 10 ? 18 : 16;
   let r = total >= 1000 ? 50 : total >= 100 ? 32 : total >= 10 ? 24 : 18;
-  if (props.point_count == null || props.point_count <= 1) {
+  if (props.point_count == null || (props.point_count as unknown as number) <= 1) {
     r = r - 8;
   }
-  const r0 = props.point_count > 1 ? Math.round(r * 0.6) : 0;
+  const r0 = (props.point_count as unknown as number) > 1 ? Math.round(r * 0.6) : 0;
   const w = r * 2;
 
   return (
@@ -74,12 +76,12 @@ function createDonutChart(
               (offsets[index] + grouped[item]) / total,
               r - 1,
               r0,
-              colors[item],
+              colors[item] as string,
               `donut-segment-${index}`,
             );
           })}
         </g>
-        {props.point_count > 1 && (
+        {(props.point_count as unknown as number) > 1 && (
           <text dominantBaseline="central" transform={`translate(${r}, ${r})`}>
             {total.toLocaleString()}
           </text>
@@ -89,7 +91,7 @@ function createDonutChart(
   );
 }
 
-function donutSegment(start, end, r, r0, color, key) {
+function donutSegment(start : number, end:number, r:number, r0:number, color:string, key:string) {
   if (end - start === 1) end -= 0.00001;
   const a0 = 2 * Math.PI * (start - 0.25);
   const a1 = 2 * Math.PI * (end - 0.25);
@@ -130,14 +132,14 @@ const getBoundsForPoints = (points: Array<MyGeometry>) => {
 
 export default function EventClusterMap(props: {
   events: Array<MyEvent>;
-  categories: Array<unknown>;
+  categories: Array<Category>;
 }): JSX.Element {
   const mapRef = useRef<MapRef>(null);
   const [isClustering] = useState(true);
 
   const { events, categories } = props;
 
-  const [donutClusterMarkers, setDonutClusterMarkers] = useState();
+  const [donutClusterMarkers, setDonutClusterMarkers] = useState<Array<JSX.Element>>([]);
 
   const [mapMarkers, eventTypes] = useMemo(() => {
     const markers = [];
@@ -176,7 +178,7 @@ export default function EventClusterMap(props: {
       const features = mapRef.current.querySourceFeatures("events-source");
       const clusterPropertiesKey = Object.keys(eventTypes);
 
-      const categoryColors = {};
+      const categoryColors : Record<string, string> = {};
       for (const item of categories) {
         categoryColors[item.label] = item.color;
       }
@@ -237,11 +239,12 @@ export default function EventClusterMap(props: {
           feat.properties.cluster_id == null ||
           !clusteredIDs.includes(feat.properties.cluster_id)
         ) {
+          const point = feat.geometry as GeoJSON.Point;
           newMarkers.push(
             <Marker
               key={markerKey}
-              longitude={feat.geometry.coordinates[0]}
-              latitude={feat.geometry.coordinates[1]}
+              longitude={point.coordinates[0]}
+              latitude={point.coordinates[1]}
               anchor="center"
               onClick={(e) => {
                 e.originalEvent.stopPropagation();
@@ -254,7 +257,7 @@ export default function EventClusterMap(props: {
                       ? `${sitesArray.slice(0, 20).join(", ")} +${sitesArray.length - 20} more`
                       : sitesArray.join(", ");
 
-                  feat.propoerties.sitesText = newSitesText;
+                  feat.properties.sitesText = newSitesText;
                   // setPopupInfo(feat);
                 }
               }}

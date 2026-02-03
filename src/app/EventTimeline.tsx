@@ -363,11 +363,6 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
     width - labelWidth - margins.left - margins.right,
   );
 
-  // Handle wheel zoom
-  const handleWheelDummy = () => {
-    // Wheel handling is now done via useEffect with passive: false
-  };
-
   // Handle drag to pan
   const handleMouseDown = (e: React.MouseEvent) => {
     // Only initiate drag on left mouse button

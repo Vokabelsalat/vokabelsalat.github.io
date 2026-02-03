@@ -20,7 +20,7 @@ import MultiRowTimeline from "./EventTimeline";
 import { ExtracurricularSection, extras } from "./ExtracurricularSection";
 import { cityCoordinates } from "./locations";
 import { ProjectSection } from "./ProjectSection";
-import { EventType, EventTypeColors, MyEvent } from "./types";
+import { EventType, EventTypeColors, MyEvent, Position, Workshop } from "./types";
 import { PortfolioSection } from "./PortfolioSection";
 
 const allEvents: Array<MyEvent> = [
@@ -58,8 +58,23 @@ const allEvents: Array<MyEvent> = [
   }),
 ];
 
+export type Category = {
+  id: string;
+  label: string;
+  color: string;
+  items: Array<
+    (Position | Workshop) & {
+      label: string;
+      id: string;
+      end: Date;
+    }
+  >;
+};
+
+type Categories = Category[];
+
 export default function Page(): JSX.Element {
-  const categories = useMemo(() => {
+  const categories : Categories = useMemo(() => {
     return [
       {
         id: "position",
