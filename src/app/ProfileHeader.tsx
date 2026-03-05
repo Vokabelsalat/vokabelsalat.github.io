@@ -55,8 +55,8 @@ export const ProfileHeader: React.FC = () => {
           className="rounded object-cover"
         />
       </div>
-      <div className="grid grid-cols-1 grid-rows-[auto_min-content] w-fit justify-self-center">
-        <div className="z-0 my-auto text-lg lg:text-2xl xl:text-4xl text-neutral-700 justify-center flex">
+      <div className="grid grid-cols-1 grid-rows-[auto_min-content] w-fit justify-self-center text-neutral-700">
+        <div className="z-0 my-auto text-lg lg:text-2xl xl:text-4xl justify-center flex">
           Jakob Kusnick
         </div>
         <div className="flex text-center justify-center text-sm lg:text-base mt-1">Postdoctoral Research Fellow</div>
