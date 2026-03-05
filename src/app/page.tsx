@@ -141,7 +141,7 @@ export default function Page(): JSX.Element {
             <div className="w-full h-48">
               <EventClusterMap events={allEvents} categories={categories} />
             </div>
-            <div className="w-full">
+            <div className="w-full hidden lg:block">
               {/* <EventTimeline events={allEvents} /> */}
               <MultiRowTimeline
                 categories={categories}
