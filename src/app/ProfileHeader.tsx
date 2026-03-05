@@ -68,24 +68,15 @@ export const ProfileHeader: React.FC = () => {
           <div className={`size-5 relative ${i === 0 ? "col-span-2" : ""}`} key={`test-${i}`}>
             <a
               key={link.label}
-              href={link.href}
+              href={link.href}/*  */
               className="flex flex-col items-center text-center text-tiny text-blue-400 group"
               target={link.external ? "_blank" : undefined}
               rel={link.external ? "noopener noreferrer" : undefined}
             >
               <div className="size-5 fill-blue-400">{link.icon}</div>
-              {/* <div className="opacity-0 group-hover:opacity-100 bg-white group-hover:z-50 p-1">{link.label}</div> */}
             </a>
           </div>
         ))}
-        {/* <a
-            href="https://maps.app.goo.gl/pTdtsDBQTR4Wkpoe7"
-            target="_blank"
-            className="flex items-center gap-1 text-xs text-blue-400"
-          >
-            <HomeIcon className="size-4" />
-            Bergen, Norway
-          </a> */}
       </div>
     </header >
   );
