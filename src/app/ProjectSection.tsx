@@ -5,12 +5,12 @@ import Link from "next/link";
 
 const teachings: Position[] = [
   {
-    title: "LEAD AI",
+    title: "Narrative Nubs",
     institution: "University of Bergen",
     location: "Bergen, Norway",
     period: "Jan. 2026 - now",
     details: ["Hosted by Prof. Nick Montfort"],
-    link: "https://www.uib.no/en/leadai",
+    link: "https://codeberg.org/nickmontfort/narrative-nubs",
     type: "range",
     start: new Date(2026, 0, 1),
     end: new Date(),
@@ -100,7 +100,7 @@ export const ProjectSection: React.FC = () => {
                 target="_blank"
                 href={teaching.link}
                 className="text-blue-400"
-                // className="overflow-hidden w-full max-md:max-w-full italic mt-0.5"
+              // className="overflow-hidden w-full max-md:max-w-full italic mt-0.5"
               >
                 {teaching.link}
               </Link>

@@ -710,7 +710,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                       width={labelWidth}
                       height={rowHeightPx}
                     >
-                      <div className="h-full flex items-center justify-start pr-3 bg-gray-100">
+                      <div className="h-full flex items-center justify-start px-1 bg-gray-100">
                         <div className="flex items-center gap-2 text-xs font-medium text-gray-800">
                           <span
                             className="inline-block w-3 h-3 rounded"
