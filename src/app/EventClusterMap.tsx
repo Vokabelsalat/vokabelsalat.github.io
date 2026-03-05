@@ -10,6 +10,8 @@ interface MyGeometry {
   coordinates: { lat: number; lon: number };
 }
 
+type MapEventType = Exclude<EventType, "Publication">;
+
 function createDonutChart(
   props: Record<string, object>,
   dataKeys: Array<string>,
@@ -143,23 +145,20 @@ export default function EventClusterMap(props: {
 
   const [mapMarkers, eventTypes] = useMemo(() => {
     const markers = [];
-    const types: Record<MyEvent["type"], number> = {
+    const types: Record<MapEventType, number> = {
       Position: 0,
-      Workshop: 0,
-      Publication: 0,
+      Presentation: 0,
       Teaching: 0,
     };
     for (const event of events) {
-      if (Object.keys(types).includes(event.type)) {
-        types[event.type] = types[event.type] + 1;
-      } else {
-        types[event.type] = 1;
-      }
+      const normalizedType: MapEventType =
+        event.type === "Publication" ? "Presentation" : event.type;
+      types[normalizedType] = types[normalizedType] + 1;
 
       if (event.coordinates) {
         const newMarker: GeoJSON.Feature<GeoJSON.Point, MyEvent> = {
           type: "Feature" as const,
-          properties: { ...event, [event.type]: 1 },
+          properties: { ...event, type: normalizedType, [normalizedType]: 1 },
           geometry: {
             type: "Point",
             coordinates: [event.coordinates.lon, event.coordinates.lat],
@@ -320,11 +319,7 @@ export default function EventClusterMap(props: {
         clusterRadius={50}
         clusterProperties={{
           Position: ["+", ["case", ["==", ["get", "type"], "Position"], 1, 0]],
-          Workshop: ["+", ["case", ["==", ["get", "type"], "Workshop"], 1, 0]],
-          Publication: [
-            "+",
-            ["case", ["==", ["get", "type"], "Publication"], 1, 0],
-          ],
+          Presentation: ["+", ["case", ["==", ["get", "type"], "Presentation"], 1, 0]],
           Teaching: ["+", ["case", ["==", ["get", "type"], "Teaching"], 1, 0]],
         }}
       >

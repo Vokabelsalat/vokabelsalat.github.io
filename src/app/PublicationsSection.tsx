@@ -3,7 +3,16 @@ import * as React from "react";
 import { Publication } from "./types";
 import { PublicationEntry } from "./PublicationEntry";
 
-const publications: Publication[] = [
+export const publications: Publication[] = [
+  {
+    title:
+      "A Narrative Visualization Tool for Personalized Exploration of Long-Distance Hiking Trails",
+    year: "2025",
+    authors:
+      "A. Dahlgren, K. Drewsen, J. Rosenlund, E. Sørensen, J. Kusnick, and S. Jänicke",
+    reference: "International Conference on Computer-Human Interaction Research and Applications",
+    doi: "https://doi.org/10.1007/978-3-032-16454-4_19",
+  },
   {
     title:
       "Visual analysis of diversity and threat status of natural materials for musical instruments",

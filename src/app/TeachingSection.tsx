@@ -55,10 +55,10 @@ export const teachings: Position[] = [
     title: "Guest Lecture on Narrative Visualizations",
     institution: "University of Southern Denmark",
     location: "Odense, Denmark",
-    period: "13. Nov. 2024",
+    period: "13. Nov. 2025",
     details: ["Hosted by Prof. Stefan Jänicke"],
     type: "point",
-    start: new Date("2024-11-15"),
+    start: new Date("2025-11-15"),
   },
   {
     title: "Guest Lecture on Narrative Visualizations",

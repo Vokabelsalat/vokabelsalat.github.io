@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dr. Jakob Kusnick",
+  title: "Jakob Kusnick",
   description: "About Jakob Kusnick",
 };
 

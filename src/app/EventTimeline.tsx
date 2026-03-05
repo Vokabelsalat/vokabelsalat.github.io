@@ -182,6 +182,65 @@ const formatFor = (fmt?: string) => {
 const RowGutter = 8; // gap between lanes
 
 const ItemHeight = 22; // bar height for ranges
+const RangeLaneGap = 2;
+
+type RowItemLayout = {
+  laneById: Record<string, number>;
+  laneCount: number;
+};
+
+const buildRowItemLayout = (
+  items: TimelineItem[],
+  pointPaddingMs: number,
+): RowItemLayout => {
+  const timedItems = items
+    .filter((item) => item.start != null)
+    .map((item) => {
+      const center = item.start?.getTime() ?? 0;
+      const start = isRange(item) ? center : center - pointPaddingMs;
+      const end = isRange(item)
+        ? item.end?.getTime() ?? center
+        : center + pointPaddingMs;
+      return { id: item.id, start, end };
+    })
+    .sort((a, b) => a.start - b.start || a.end - b.end);
+
+  const laneEnds: number[] = [];
+  const laneById: Record<string, number> = {};
+  for (const timedItem of timedItems) {
+    let lane = laneEnds.findIndex((laneEnd) => laneEnd < timedItem.start);
+    if (lane < 0) {
+      lane = laneEnds.length;
+      laneEnds.push(timedItem.end);
+    } else {
+      laneEnds[lane] = timedItem.end;
+    }
+    laneById[timedItem.id] = lane;
+  }
+  return { laneById, laneCount: Math.max(1, laneEnds.length) };
+};
+
+const inlineComputedStyles = (
+  source: SVGSVGElement,
+  target: SVGSVGElement,
+) => {
+  const rootComputed = window.getComputedStyle(source);
+  const rootStyleText = Array.from(rootComputed)
+    .map((prop) => `${prop}:${rootComputed.getPropertyValue(prop)};`)
+    .join("");
+  target.setAttribute("style", rootStyleText);
+  const sourceElements = source.querySelectorAll<HTMLElement>("*");
+  const targetElements = target.querySelectorAll<HTMLElement>("*");
+  sourceElements.forEach((srcEl, idx) => {
+    const tgtEl = targetElements[idx];
+    if (!tgtEl) return;
+    const computed = window.getComputedStyle(srcEl);
+    const styleText = Array.from(computed)
+      .map((prop) => `${prop}:${computed.getPropertyValue(prop)};`)
+      .join("");
+    tgtEl.setAttribute("style", styleText);
+  });
+};
 
 const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
   categories,
@@ -200,23 +259,20 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
   const svgRef = useRef<SVGSVGElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const bounds = useResizeObserver(wrapperRef);
-  
+
   // Zoom state: zoom level and pan offset
   const [zoomLevel, setZoomLevel] = useState(1);
   const [panOffset, setPanOffset] = useState(0);
-  
+
   // Drag state for panning
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartX, setDragStartX] = useState(0);
   const [dragStartPanOffset, setDragStartPanOffset] = useState(0);
 
+  const ItemHeightSingle = dotRadius * 2; // circle height for single events
+
   // Dimensions
   const width = bounds?.width ?? 800;
-  const height = useMemo(() => {
-    const rows = categories.length;
-    const inner = rows * rowHeight + (rows - 1) * RowGutter;
-    return inner + margins.top + margins.bottom;
-  }, [categories.length, rowHeight, margins.bottom, margins.top]);
 
   // Base domain (before zoom)
   const baseDomain: [Date, Date] = useMemo(() => {
@@ -238,10 +294,10 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
     const [baseMin, baseMax] = baseDomain;
     const baseSpan = baseMax.getTime() - baseMin.getTime();
     const zoomedSpan = baseSpan / zoomLevel;
-    
+
     // Center point with pan offset
     const centerTime = baseMin.getTime() + baseSpan / 2 + panOffset;
-    
+
     const min = new Date(centerTime - zoomedSpan / 2);
     const max = new Date(centerTime + zoomedSpan / 2);
     return [min, max];
@@ -258,10 +314,41 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
       ])
       .nice();
   }, [xDomain, width, labelWidth, margins.left, margins.right]);
+  const pointPaddingMs = useMemo(() => {
+    const t0 = x.invert(0).getTime();
+    const t1 = x.invert(dotRadius).getTime();
+    return Math.abs(t1 - t0);
+  }, [x, dotRadius]);
+  const rowItemLayouts = useMemo(
+    () => categories.map((cat) => buildRowItemLayout(cat.items, pointPaddingMs)),
+    [categories, pointPaddingMs],
+  );
+  const rowHeights = useMemo(() => {
+    return rowItemLayouts.map((layout) => {
+      const laneHeight =
+        layout.laneCount * ItemHeight + (layout.laneCount - 1) * RangeLaneGap;
+      return Math.max(rowHeight, laneHeight);
+    });
+  }, [rowItemLayouts, rowHeight]);
+  const rowOffsets = useMemo(() => {
+    let y = margins.top;
+    return rowHeights.map((h) => {
+      const current = y;
+      y += h + RowGutter;
+      return current;
+    });
+  }, [rowHeights, margins.top]);
+  const height = useMemo(() => {
+    const totalRowsHeight = rowHeights.reduce((sum, h) => sum + h, 0);
+    const totalGutter = Math.max(0, categories.length - 1) * RowGutter;
+    return totalRowsHeight + totalGutter + margins.top + margins.bottom;
+  }, [categories.length, rowHeights, margins.bottom, margins.top]);
 
   // Ticks
   const ticks = useMemo(() => ticksFor(x, tickEvery), [x, tickEvery]);
+  const yearTicks = useMemo(() => x.ticks(d3.timeYear), [x]);
   const fmt = useMemo(() => formatFor(tickFormat), [tickFormat]);
+  const yearFmt = useMemo(() => d3.timeFormat("%Y"), []);
 
   // Basic tooltip management with a floating div
   const [tooltip, setTooltip] = useState<{
@@ -290,18 +377,17 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
       item.label ??
       (item.start != null && item.end != null && isRange(item)
         ? `${d3.timeFormat("%b %d, %Y")(item.start)} – ${d3.timeFormat(
-            "%b %d, %Y",
-          )(item.end)}`
+          "%b %d, %Y",
+        )(item.end)}`
         : d3.timeFormat("%b %d, %Y")(item.start as Date));
     const detail = isRange(item)
       ? `${d3.timeFormat("%b %d, %Y")(item.start as Date)} – ${d3.timeFormat(
-          "%b %d, %Y",
-        )(item.end as Date)}`
+        "%b %d, %Y",
+      )(item.end as Date)}`
       : `${d3.timeFormat("%b %d, %Y")(item.start as Date)}`;
 
-    const html = `<div><div class="font-medium">${title}</div><div class="opacity-80">${detail}</div><div class="mt-1">${
-      item.tooltip ?? ""
-    }</div></div>`;
+    const html = `<div><div class="font-medium">${title}</div><div class="opacity-80">${detail}</div><div class="mt-1">${item.tooltip ?? ""
+      }</div></div>`;
     setTooltip({ x: sx + 10, y: sy - 10, html, visible: true });
   };
 
@@ -355,8 +441,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
   }, [x, baseDomain, xDomain, zoomLevel, labelWidth, margins.left]);
 
   // Row helpers
-  const rowY = (rowIndex: number) =>
-    margins.top + rowIndex * (rowHeight + RowGutter);
+  const rowY = (rowIndex: number) => rowOffsets[rowIndex] ?? margins.top;
 
   const innerWidth = Math.max(
     0,
@@ -367,10 +452,10 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
   const handleMouseDown = (e: React.MouseEvent) => {
     // Only initiate drag on left mouse button
     if (e.button !== 0) return;
-    
+
     const svg = svgRef.current;
     if (!svg) return;
-    
+
     setIsDragging(true);
     setDragStartX(e.clientX);
     setDragStartPanOffset(panOffset);
@@ -378,19 +463,19 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging) return;
-    
+
     const svg = svgRef.current;
     if (!svg) return;
-    
+
     // Calculate pixel delta
     const deltaX = e.clientX - dragStartX;
-    
+
     // Convert pixel delta to time delta based on current scale
     const [currentMin, currentMax] = xDomain;
     const currentSpan = currentMax.getTime() - currentMin.getTime();
     const pixelToTime = currentSpan / innerWidth;
     const timeDelta = -deltaX * pixelToTime; // Negative for natural drag direction
-    
+
     setPanOffset(dragStartPanOffset + timeDelta);
   };
 
@@ -402,9 +487,36 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
     setIsDragging(false);
   };
 
+  const handleDownloadSvg = () => {
+    const svg = svgRef.current;
+    if (!svg) return;
+
+    const clone = svg.cloneNode(true) as SVGSVGElement;
+    clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    clone.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+    clone.setAttribute("width", `${width}`);
+    clone.setAttribute("height", `${height}`);
+    clone.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+    inlineComputedStyles(svg, clone);
+
+    const serializer = new XMLSerializer();
+    const svgText = serializer.serializeToString(clone);
+    const blob = new Blob([svgText], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "timeline.svg";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
-    <div 
-      ref={wrapperRef} 
+    <div
+      ref={wrapperRef}
       className={"w-full " + (className ?? "")}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
@@ -415,14 +527,22 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
       {" "}
       {/* outer responsive container */}
       <div className="shadow-sm select-none">
+        {/* <div className="flex items-center justify-end px-4 pt-3">
+          <button
+            type="button"
+            className="text-xs font-medium text-gray-700 hover:text-gray-900 border border-gray-200 rounded-md px-2 py-1 bg-white shadow-sm"
+            onClick={handleDownloadSvg}
+          >
+            Download SVG
+          </button>
+        </div> */}
         {/* Header axis */}
         <div className="px-4 pt-3">
           <div className="relative over overflow-hidden">
             <svg width={width} height={margins.top} className="block">
               <g
-                transform={`translate(${labelWidth + margins.left}, ${
-                  margins.top - 6
-                })`}
+                transform={`translate(${labelWidth + margins.left}, ${margins.top - 6
+                  })`}
               >
                 {/* Axis line */}
                 <line
@@ -432,6 +552,17 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                   y2={0}
                   className="stroke-gray-200"
                 />
+                {yearTicks.map((t, i) => (
+                  <g key={`year-${i}`} transform={`translate(${x(t)},0)`}>
+                    <text
+                      y={-8}
+                      className="text-[10px] fill-gray-500 select-none"
+                      textAnchor="middle"
+                    >
+                      {yearFmt(t as Date)}
+                    </text>
+                  </g>
+                ))}
                 {ticks.map((t, i) => (
                   <g key={i} transform={`translate(${x(t)},0)`}>
                     <line y1={0} y2={6} className="stroke-gray-300" />
@@ -469,34 +600,45 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
             {/* Rows */}
             {categories.map((cat, rowIdx) => {
               const y = rowY(rowIdx);
+              const rowHeightPx = rowHeights[rowIdx] ?? rowHeight;
+              const rowItemLayout = rowItemLayouts[rowIdx] ?? {
+                laneById: {},
+                laneCount: 1,
+              };
+              const lanesHeight =
+                rowItemLayout.laneCount * ItemHeight +
+                (rowItemLayout.laneCount - 1) * RangeLaneGap;
+              const rangeTopOffset = Math.max(0, (rowHeightPx - lanesHeight) / 2);
               return (
-                <g key={`${cat}-${rowIdx}`} transform={`translate(0, ${y})`}>
+                <g key={`${cat.id}-${rowIdx}`} transform={`translate(0, ${y})`}>
                   {/* Items lane */}
                   <g transform={`translate(${labelWidth + margins.left}, 0)`}>
                     {/* Baseline */}
                     <line
                       x1={0}
                       x2={innerWidth}
-                      y1={rowHeight / 2}
-                      y2={rowHeight / 2}
+                      y1={rowHeightPx / 2}
+                      y2={rowHeightPx / 2}
                       className="stroke-gray-200"
                     />
 
                     {/* Ranges first, then points on top */}
-                    {cat.items.filter(isRange).map((item, i) => {
+                    {cat.items.filter(isRange).map((item) => {
                       const x1 = x(item.start as Date);
                       const x2 = x(item.end as Date);
                       const w = Math.max(2, x2 - x1);
+                      const lane = rowItemLayout.laneById[item.id] ?? 0;
+                      const itemY = rangeTopOffset + lane * (ItemHeight + RangeLaneGap);
                       return (
                         <g
-                          key={`timeline-event-${i}`}
+                          key={`timeline-event-${item.id}`}
                           className="cursor-pointer"
                           onMouseMove={(e) => handleMouse(e, item)}
                           onMouseLeave={hideTooltip}
                         >
                           <foreignObject
                             x={x1}
-                            y={(rowHeight - ItemHeight) / 2}
+                            y={itemY}
                             width={w + 2}
                             height={ItemHeight}
                           >
@@ -526,6 +668,11 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                       .filter((i) => !isRange(i))
                       .map((item, i) => {
                         const cx = x((item as TimelineEvent).start as Date);
+                        const lane = rowItemLayout.laneById[item.id] ?? 0;
+                        const laneOffset = lane - (rowItemLayout.laneCount - 1) / 2;
+                        const cy =
+                          rowHeightPx / 2 +
+                          laneOffset * (ItemHeightSingle + RangeLaneGap);
                         return (
                           <g
                             key={`timeline-circle-${i}`}
@@ -533,7 +680,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                           >
                             <circle
                               cx={cx}
-                              cy={rowHeight / 2}
+                              cy={cy}
                               r={dotRadius}
                               fill={item.color ?? cat.color ?? "#334155"}
                               onMouseMove={(e) =>
@@ -545,7 +692,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                             {item.label && (
                               <text
                                 x={cx + dotRadius + 4}
-                                y={rowHeight / 2 + 4}
+                                y={cy + 4}
                                 className="text-[11px] fill-gray-800 select-none"
                               >
                                 {/* {item.title} */}
@@ -561,7 +708,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                       x={0}
                       y={-2}
                       width={labelWidth}
-                      height={rowHeight}
+                      height={rowHeightPx}
                     >
                       <div className="h-full flex items-center justify-start pr-3 bg-gray-100">
                         <div className="flex items-center gap-2 text-xs font-medium text-gray-800">

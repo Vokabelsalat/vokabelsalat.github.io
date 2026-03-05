@@ -2,6 +2,8 @@
 import * as React from "react";
 import { EnvelopeIcon, HomeIcon, PhoneIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGoogleScholar, faLinkedin, faOrcid, faResearchgate } from "@fortawesome/free-brands-svg-icons";
 
 export const ProfileHeader: React.FC = () => {
   return (
@@ -19,32 +21,67 @@ export const ProfileHeader: React.FC = () => {
       </figure> */}
 
       <div className="grid grid-cols-1 grid-rows-[auto_min-content] w-fit justify-self-center">
-        <div className="z-0 pb-3.5 my-auto text-4xl text-neutral-700 justify-center flex">
-          DR. JAKOB KUSNICK
+        <div className="z-0 my-auto text-4xl text-neutral-700 justify-center flex">
+          Jakob Kusnick
         </div>
+        <div className="flex justify-center mt-1">Postdoctoral Research Fellow</div>
+        <div className="flex justify-center text-xs">Center for Digital Narrative</div>
+        <div className="flex justify-center text-xs">University of Bergen, Norway</div>
 
-        <div className="flex w-full justify-between gap-3">
+        <div className="flex w-full justify-between gap-3 mt-2">
           <a
             href="mailto:kusnick@imada.sdu.dk"
-            className="flex items-center gap-1 text-xs text-blue-400"
+            className="flex flex-col items-center text-tiny text-blue-400"
           >
             <EnvelopeIcon className="size-4" />
-            kusnick@imada.sdu.dk
+            Mail
           </a>
           <a
+            href="https://scholar.google.de/citations?hl=de&user=9A5PfmYAAAAJ&view_op=list_works"
+            className="flex flex-col items-center text-tiny text-blue-400"
+          >
+            <div className="size-4 fill-blue-400">
+              <FontAwesomeIcon className="scale-140" icon={faGoogleScholar} />
+            </div>
+            Google Scholar
+          </a>
+          <a
+            href="https://orcid.org/0000-0002-1653-6614"
+            className="flex flex-col items-center text-tiny text-blue-400"
+          >
+            <div className="size-4 fill-blue-400">
+              <FontAwesomeIcon className="scale-140" icon={faOrcid} />
+            </div>
+            ORCID
+          </a>
+          <a
+            href="https://www.researchgate.net/profile/Jakob-Kusnick"
+            className="flex flex-col items-center text-tiny text-blue-400"
+          >
+            <div className="size-4 fill-blue-400">
+              <FontAwesomeIcon className="scale-140" icon={faResearchgate} />
+            </div>
+            Research Gate
+          </a>
+          <a
+            href="https://www.linkedin.com/in/jakob-kusnick-496208242/"
+            className="flex flex-col items-center text-tiny text-blue-400"
+          >
+            <div className="size-4 fill-blue-400">
+              <FontAwesomeIcon className="scale-140" icon={faLinkedin} />
+            </div>
+            LinkedIn
+          </a>
+          {/* <a
             href="https://maps.app.goo.gl/pTdtsDBQTR4Wkpoe7"
             target="_blank"
             className="flex items-center gap-1 text-xs text-blue-400"
           >
             <HomeIcon className="size-4" />
             Bergen, Norway
-          </a>
-          <div className="flex items-center gap-1 text-xs text-blue-400">
-            <PhoneIcon className="size-4" />
-            +45 71 48 53 00
-          </div>
+          </a> */}
         </div>
       </div>
-    </header>
+    </header >
   );
 };

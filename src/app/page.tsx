@@ -3,7 +3,7 @@ import { BiographySection } from "./BiographySection";
 import { InterestsSkillsSection } from "./InterestsSkillsSection";
 import { positions, PositionsSection } from "./PositionsSection";
 import { ProfileHeader } from "./ProfileHeader";
-import { PublicationsSection } from "./PublicationsSection";
+import { publications, PublicationsSection } from "./PublicationsSection";
 import { teachings, TeachingSection } from "./TeachingSection";
 import { workshops, WorkshopSection } from "./WorkshopSection";
 
@@ -20,7 +20,14 @@ import MultiRowTimeline from "./EventTimeline";
 import { ExtracurricularSection, extras } from "./ExtracurricularSection";
 import { cityCoordinates } from "./locations";
 import { ProjectSection } from "./ProjectSection";
-import { EventType, EventTypeColors, MyEvent, Position, Workshop } from "./types";
+import {
+  EventType,
+  EventTypeColors,
+  MyEvent,
+  Position,
+  Publication,
+  Workshop,
+} from "./types";
 import { PortfolioSection } from "./PortfolioSection";
 
 const allEvents: Array<MyEvent> = [
@@ -53,7 +60,7 @@ const allEvents: Array<MyEvent> = [
       title: e.title,
       coordinates: cityCoordinates[e.location],
       location: e.location,
-      type: "Workshop" as EventType,
+      type: "Presentation" as EventType,
     };
   }),
 ];
@@ -63,7 +70,7 @@ export type Category = {
   label: string;
   color: string;
   items: Array<
-    (Position | Workshop) & {
+    (Position | Workshop | Publication) & {
       label: string;
       id: string;
       end: Date;
@@ -74,7 +81,7 @@ export type Category = {
 type Categories = Category[];
 
 export default function Page(): JSX.Element {
-  const categories : Categories = useMemo(() => {
+  const categories: Categories = useMemo(() => {
     return [
       {
         id: "position",
@@ -88,10 +95,22 @@ export default function Page(): JSX.Element {
         })),
       },
       {
-        id: "teaching",
-        label: "Teaching",
-        color: EventTypeColors["Teaching"], // optional, per-category default
-        items: teachings.map((teaching, index) => ({
+        id: "publication",
+        label: "Publication",
+        color: EventTypeColors["Publication"], // optional, per-category default
+        items: publications.map((publication, index) => ({
+          ...publication,
+          label: publication.title,
+          id: `publication-${index}`, // Assign a unique id
+          start: new Date(`${publication.year}-01-01`),
+          end: new Date(`${publication.year}-12-31`),
+        })),
+      },
+      {
+        id: "presentation",
+        label: "Presentation",
+        color: EventTypeColors["Presentation"], // optional, per-category default
+        items: workshops.map((teaching, index) => ({
           ...teaching,
           label: teaching.title,
           id: `teaching-${index}`, // Assign a unique id
@@ -99,10 +118,10 @@ export default function Page(): JSX.Element {
         })),
       },
       {
-        id: "workshop",
-        label: "Workshop",
-        color: EventTypeColors["Workshop"], // optional, per-category default
-        items: workshops.map((teaching, index) => ({
+        id: "teaching",
+        label: "Teaching",
+        color: EventTypeColors["Teaching"], // optional, per-category default
+        items: teachings.map((teaching, index) => ({
           ...teaching,
           label: teaching.title,
           id: `teaching-${index}`, // Assign a unique id
@@ -122,7 +141,7 @@ export default function Page(): JSX.Element {
             <div className="w-full h-48">
               <EventClusterMap events={allEvents} categories={categories} />
             </div>
-            <div className="w-full h-48">
+            <div className="w-full">
               {/* <EventTimeline events={allEvents} /> */}
               <MultiRowTimeline
                 categories={categories}

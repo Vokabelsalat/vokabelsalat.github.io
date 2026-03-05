@@ -1,4 +1,4 @@
-export type EventType = "Position" | "Workshop" | "Publication" | "Teaching";
+export type EventType = "Position" | "Presentation" | "Publication" | "Teaching";
 
 export interface MyEvent {
   title: string;
@@ -8,10 +8,10 @@ export interface MyEvent {
 }
 
 export const EventTypeColors : Record<EventType, string> = {
-  'Position': 'blue',
-  'Workshop': 'orange',
-  'Publication': 'green',
-  'Teaching': 'red'
+  'Position': '#33a02c',  
+  'Presentation': '#e31a1c', 
+  'Publication': '#ff7f00', 
+  'Teaching': '#1f78b4'  
 }
 
 export interface Event {
