@@ -73,7 +73,6 @@ export const PortfolioSection: React.FC = () => {
                 <div className="relative w-full h-full max-h-full gap-2 flex overflow-hidden items-start">
                   {e.images.map((img, img_i) => {
                     return (
-                      // eslint-disable-next-line @next/next/no-img-element
                       <div
                         key={`imgage-${img_i}`}
                         className="relative max-h-[400px] flex items-start"

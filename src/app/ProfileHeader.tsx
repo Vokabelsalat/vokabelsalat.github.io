@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { EnvelopeIcon, HomeIcon, PhoneIcon } from "@heroicons/react/24/solid";
+import { EnvelopeIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogleScholar, faLinkedin, faOrcid, faResearchgate } from "@fortawesome/free-brands-svg-icons";

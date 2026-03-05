@@ -220,27 +220,27 @@ const buildRowItemLayout = (
   return { laneById, laneCount: Math.max(1, laneEnds.length) };
 };
 
-const inlineComputedStyles = (
-  source: SVGSVGElement,
-  target: SVGSVGElement,
-) => {
-  const rootComputed = window.getComputedStyle(source);
-  const rootStyleText = Array.from(rootComputed)
-    .map((prop) => `${prop}:${rootComputed.getPropertyValue(prop)};`)
-    .join("");
-  target.setAttribute("style", rootStyleText);
-  const sourceElements = source.querySelectorAll<HTMLElement>("*");
-  const targetElements = target.querySelectorAll<HTMLElement>("*");
-  sourceElements.forEach((srcEl, idx) => {
-    const tgtEl = targetElements[idx];
-    if (!tgtEl) return;
-    const computed = window.getComputedStyle(srcEl);
-    const styleText = Array.from(computed)
-      .map((prop) => `${prop}:${computed.getPropertyValue(prop)};`)
-      .join("");
-    tgtEl.setAttribute("style", styleText);
-  });
-};
+// const inlineComputedStyles = (
+//   source: SVGSVGElement,
+//   target: SVGSVGElement,
+// ) => {
+//   const rootComputed = window.getComputedStyle(source);
+//   const rootStyleText = Array.from(rootComputed)
+//     .map((prop) => `${prop}:${rootComputed.getPropertyValue(prop)};`)
+//     .join("");
+//   target.setAttribute("style", rootStyleText);
+//   const sourceElements = source.querySelectorAll<HTMLElement>("*");
+//   const targetElements = target.querySelectorAll<HTMLElement>("*");
+//   sourceElements.forEach((srcEl, idx) => {
+//     const tgtEl = targetElements[idx];
+//     if (!tgtEl) return;
+//     const computed = window.getComputedStyle(srcEl);
+//     const styleText = Array.from(computed)
+//       .map((prop) => `${prop}:${computed.getPropertyValue(prop)};`)
+//       .join("");
+//     tgtEl.setAttribute("style", styleText);
+//   });
+// };
 
 const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
   categories,
@@ -487,7 +487,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
     setIsDragging(false);
   };
 
-  const handleDownloadSvg = () => {
+  /* const handleDownloadSvg = () => {
     const svg = svgRef.current;
     if (!svg) return;
 
@@ -512,7 +512,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-  };
+  }; */
 
   return (
     <div
