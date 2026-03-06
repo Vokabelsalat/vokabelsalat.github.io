@@ -22,7 +22,7 @@ export const PublicationEntry: React.FC<PublicationEntryProps> = ({
         {publication.doi && (
           <a
             href={publication.doi}
-            className="text-xs text-blue-400 underline"
+            className="text-xs text-blue-400 hover:text-black"
             target="_blank"
             rel="noopener noreferrer"
           >

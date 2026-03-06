@@ -21,7 +21,7 @@ const contactLinks: ContactLink[] = [
   {
     href: "mailto:kusnick@imada.sdu.dk",
     label: "Mail",
-    icon: <EnvelopeIcon className="size-4" />,
+    icon: <EnvelopeIcon className="size-5" />,
   },
   {
     href: "https://scholar.google.de/citations?hl=de&user=9A5PfmYAAAAJ&view_op=list_works",
@@ -88,7 +88,7 @@ export const ProfileHeader: React.FC = () => {
               <a
                 key={link.label}
                 href={link.href}/*  */
-                className="flex flex-col items-center text-center text-tiny text-blue-400 group"
+                className="flex flex-col items-center justify-center text-center text-tiny text-blue-400 group hover:text-neutral-800"
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noopener noreferrer" : undefined}
               >

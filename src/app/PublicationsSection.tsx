@@ -127,7 +127,7 @@ export const PublicationsSection: React.FC = () => {
         <div className="overflow-hidden mt-2.5 w-full text-xs text-blue-400 max-md:max-w-full">
           <a
             href="https://scholar.google.de/citations?hl=de&user=9A5PfmYAAAAJ&view_op=list_works"
-            className="underline block"
+            className="underline block hover:text-black"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -135,7 +135,7 @@ export const PublicationsSection: React.FC = () => {
           </a>
           <a
             href="https://portal.findresearcher.sdu.dk/en/persons/kusnick"
-            className="underline block mt-1"
+            className="underline block mt-1 hover:text-black"
             target="_blank"
             rel="noopener noreferrer"
           >

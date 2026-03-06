@@ -105,7 +105,7 @@ export const PortfolioSection: React.FC = () => {
                         key={`link-${i}`}
                         href={link}
                         target="_blank"
-                        className="text-blue-400"
+                        className="text-blue-400 hover:text-black"
                       >
                         {link}
                       </a>

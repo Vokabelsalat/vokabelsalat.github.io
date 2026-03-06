@@ -216,8 +216,8 @@ export const WorkshopSection: React.FC = () => {
                 <Link
                   target="_blank"
                   href={workshop.link}
-                  className="text-blue-400"
-                  // className="overflow-hidden w-full max-md:max-w-full italic mt-0.5"
+                  className="text-blue-400 hover:text-black"
+                // className="overflow-hidden w-full max-md:max-w-full italic mt-0.5"
                 >
                   {workshop.link}
                 </Link>

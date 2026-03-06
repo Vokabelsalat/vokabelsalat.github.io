@@ -99,7 +99,7 @@ export const ProjectSection: React.FC = () => {
               <Link
                 target="_blank"
                 href={teaching.link}
-                className="text-blue-400"
+                className="text-blue-400 hover:text-black"
               // className="overflow-hidden w-full max-md:max-w-full italic mt-0.5"
               >
                 {teaching.link}
