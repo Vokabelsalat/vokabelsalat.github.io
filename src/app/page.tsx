@@ -136,8 +136,10 @@ export default function Page(): JSX.Element {
       <article className="max-w-3xl flex-1 shrink pb-4 w-full basis-0 relative">
         <ProfileHeader />
         <div className="relative">
-          <BiographySection />
-          <section>
+          <div id="biography" className="scroll-mt-37 section">
+            <BiographySection />
+          </div>
+          <div id="overview" className="scroll-mt-37 section">
             <div className="w-full h-48">
               <EventClusterMap events={allEvents} categories={categories} />
             </div>
@@ -151,15 +153,31 @@ export default function Page(): JSX.Element {
                 onItemClick={(item) => console.log(item)}
               />
             </div>
-          </section>
-          <PositionsSection />
-          <InterestsSkillsSection />
-          <TeachingSection />
-          <PublicationsSection />
-          <ProjectSection />
-          <ExtracurricularSection />
-          <WorkshopSection />
-          <PortfolioSection />
+          </div>
+          <div id="positions" className="scroll-mt-37 section">
+            <PositionsSection />
+          </div>
+          <div id="skills" className="scroll-mt-37 section">
+            <InterestsSkillsSection />
+          </div>
+          <div id="teaching" className="scroll-mt-37 section">
+            <TeachingSection />
+          </div>
+          <div id="publications" className="scroll-mt-37 section">
+            <PublicationsSection />
+          </div>
+          <div id="projects" className="scroll-mt-37 section">
+            <ProjectSection />
+          </div>
+          <div id="extracurricular" className="scroll-mt-37 section">
+            <ExtracurricularSection />
+          </div>
+          <div id="workshops" className="scroll-mt-37 section">
+            <WorkshopSection />
+          </div>
+          <div id="portfolio" className="scroll-mt-37 section">
+            <PortfolioSection />
+          </div>
         </div>
       </article>
     </main>

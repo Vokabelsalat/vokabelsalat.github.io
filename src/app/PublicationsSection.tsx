@@ -111,7 +111,7 @@ export const publications: Publication[] = [
 
 export const PublicationsSection: React.FC = () => {
   return (
-    <section className="flex overflow-hidden flex-col px-6 py-2.5 w-full bg-white max-md:px-5 max-md:max-w-full">
+    <section className="flex overflow-hidden flex-col px-6 py-2.5 w-full max-md:px-5 max-md:max-w-full">
       <h2 className="gap-2.5 self-start text-lg text-neutral-700 font-[Montserrat]">
         Selected Publications
       </h2>

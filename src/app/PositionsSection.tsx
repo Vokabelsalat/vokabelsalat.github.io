@@ -78,10 +78,10 @@ export const positions: Position[] = [
     title: "M.Sc. in Computer Science",
     institution: "Leipzig University",
     location: "Leipzig, Germany",
-    period: "Oct. 2015 – Feb. 2018",
+    period: "Oct. 2015 – Jan. 2018",
     type: "range",
     start: new Date("2015-10-01"),
-    end: new Date("2018-02-28"),
+    end: new Date("2018-01-31"),
   },
 ];
 

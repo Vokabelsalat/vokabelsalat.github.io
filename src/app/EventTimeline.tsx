@@ -386,7 +386,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
       )(item.end as Date)}`
       : `${d3.timeFormat("%b %d, %Y")(item.start as Date)}`;
 
-    const html = `<div><div class="font-medium">${title}</div><div class="opacity-80">${detail}</div><div class="mt-1">${item.tooltip ?? ""
+    const html = `<div class="text-neutral-700"><div class="font-medium">${title}</div><div class="opacity-80">${detail}</div><div class="mt-1">${item.tooltip ?? ""
       }</div></div>`;
     setTooltip({ x: sx + 10, y: sy - 10, html, visible: true });
   };
@@ -632,34 +632,31 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                       return (
                         <g
                           key={`timeline-event-${item.id}`}
-                          className="cursor-pointer"
+                          className="cursor-pointer group"
                           onMouseMove={(e) => handleMouse(e, item)}
                           onMouseLeave={hideTooltip}
+                          onClick={() => onItemClick?.(item, cat)}
                         >
-                          <foreignObject
+                          <rect
                             x={x1}
                             y={itemY}
-                            width={w + 2}
+                            width={w}
                             height={ItemHeight}
-                          >
-                            <div
-                              className="rounded-md flex items-center text-white text-nowrap overflow-ellipsis opacity-50 hover:opacity-100"
-                              style={{
-                                width: w,
-                                maxWidth: w,
-                                maxHeight: ItemHeight,
-                                height: ItemHeight,
-                                fontSize: "small",
-                                backgroundColor:
-                                  item.color ?? cat.color ?? "#94a3b833",
-                              }}
-                              onClick={() => onItemClick?.(item, cat)}
+                            rx={4}
+                            ry={4}
+                            className="opacity-50 group-hover:opacity-100"
+                            fill={item.color ?? cat.color ?? "#94a3b833"}
+                          />
+                          {w > 40 && item.label && (
+                            <text
+                              x={x1 + 6}
+                              y={itemY + ItemHeight / 2}
+                              className="fill-white text-[11px] select-none pointer-events-none"
+                              dominantBaseline="middle"
                             >
-                              {w > 40 && (
-                                <div className="px-1">{item.label}</div>
-                              )}
-                            </div>
-                          </foreignObject>
+                              {item.label}
+                            </text>
+                          )}
                         </g>
                       );
                     })}

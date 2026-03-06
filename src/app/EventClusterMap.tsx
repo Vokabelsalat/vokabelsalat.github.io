@@ -21,7 +21,7 @@ function createDonutChart(
   id: string,
 ) {
   console.log("PROPS", props);
-  const offsets : Array<number> = [];
+  const offsets: Array<number> = [];
 
   const grouped = Object.fromEntries(
     Object.entries(props).filter(([key, val]) => { return dataKeys.includes(key) && typeof val === "number"; })
@@ -93,7 +93,7 @@ function createDonutChart(
   );
 }
 
-function donutSegment(start : number, end:number, r:number, r0:number, color:string, key:string) {
+function donutSegment(start: number, end: number, r: number, r0: number, color: string, key: string) {
   if (end - start === 1) end -= 0.00001;
   const a0 = 2 * Math.PI * (start - 0.25);
   const a1 = 2 * Math.PI * (end - 0.25);
@@ -106,11 +106,9 @@ function donutSegment(start : number, end:number, r:number, r0:number, color:str
   return (
     <path
       key={key}
-      d={`M ${r + r0 * x0} ${r + r0 * y0} L ${r + r * x0} ${
-        r + r * y0
-      } A ${r} ${r} 0 ${largeArc} 1 ${r + r * x1} ${r + r * y1} L ${
-        r + r0 * x1
-      } ${r + r0 * y1} A ${r0} ${r0} 0 ${largeArc} 0 ${r + r0 * x0} ${r + r0 * y0}`}
+      d={`M ${r + r0 * x0} ${r + r0 * y0} L ${r + r * x0} ${r + r * y0
+        } A ${r} ${r} 0 ${largeArc} 1 ${r + r * x1} ${r + r * y1} L ${r + r0 * x1
+        } ${r + r0 * y1} A ${r0} ${r0} 0 ${largeArc} 0 ${r + r0 * x0} ${r + r0 * y0}`}
       fill={`${color}`}
     />
   );
@@ -177,7 +175,7 @@ export default function EventClusterMap(props: {
       const features = mapRef.current.querySourceFeatures("events-source");
       const clusterPropertiesKey = Object.keys(eventTypes);
 
-      const categoryColors : Record<string, string> = {};
+      const categoryColors: Record<string, string> = {};
       for (const item of categories) {
         categoryColors[item.label] = item.color;
       }
@@ -265,8 +263,8 @@ export default function EventClusterMap(props: {
                 feat.properties,
                 clusterPropertiesKey,
                 categoryColors,
-                () => {},
-                () => {},
+                () => { },
+                () => { },
                 // onMouseEnter,
                 // onMouseLeave,
                 markerKey,
@@ -333,7 +331,7 @@ export default function EventClusterMap(props: {
         />
         {donutClusterMarkers}
       </Source>
-      <div className="absolute top-1 right-1 p-1 shadow-md rounded-md flex flex-col bg-white/50">
+      <div className="absolute top-1 right-1 p-1 shadow-md rounded-md flex flex-col bg-white/50 text-neutral-700">
         <b>Legend</b>
         {Object.keys(eventTypes).map((type, i) => {
           return (
