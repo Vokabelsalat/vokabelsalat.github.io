@@ -74,6 +74,21 @@ export const workshops: Workshop[] = [
   //   },
   //   // Johannes Liem, Jakob Kusnick, Steffan Jänicke, Carina Doppler, Markus Passecker, Eva Mayr, Florian Windhager Data Driven Storytelling zu kulturellen Objekten und Biographien 14.3.2023 Luxemburg
   {
+    title: "Research Stay",
+    institution: "MIT - Massachusetts Institute of Technology",
+    authors: "J. Kusnick",
+    location: "Cambridge, USA",
+    date: "9. - 22. March. 2026",
+    details: [
+      "Research Stay at the MIT Trope Tank",
+      "Hosted by Prof. Nick Monfort"
+    ],
+    link: "https://tropetank.com",
+    type: "range",
+    start: new Date("2026-03-09"),
+    end: new Date("2026-03-22"),
+  },
+  {
     title: "Mapping Algae: Connecting Farmers, Products, and Markets",
     institution: "EX-AQUA",
     authors: "J. Kusnick",

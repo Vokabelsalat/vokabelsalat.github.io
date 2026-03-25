@@ -20,7 +20,6 @@ function createDonutChart(
   onMouseLeave: () => void,
   id: string,
 ) {
-  console.log("PROPS", props);
   const offsets: Array<number> = [];
 
   const grouped = Object.fromEntries(
@@ -293,7 +292,7 @@ export default function EventClusterMap(props: {
       minZoom={0}
       maxZoom={20}
       style={{ width: "100%", height: "100%", position: "relative" }}
-      mapStyle="https://api.maptiler.com/maps/019864da-bd1a-77a6-8cb4-b2fb2323302f/style.json?key=JryEbN305oNyHUvClr79"
+      mapStyle="https://api.maptiler.com/maps/dataviz-v4-light/style.json?key=JryEbN305oNyHUvClr79"
       onLoad={() => {
         mapRef.current?.fitBounds(
           getBoundsForPoints(events) as maplibregl.LngLatBoundsLike,

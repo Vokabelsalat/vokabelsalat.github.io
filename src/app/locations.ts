@@ -12,4 +12,5 @@ export const cityCoordinates: Record<string, { lat: number; lon: number }> = {
   "Constanța, Romania": {lat: 44.166667, lon: 28.633333 },
   "Bergen, Norway": {lat: 60.389444, lon: 5.33 },
   "Tarsia, Italy": {lat: 39.583333, lon: 16.244167 },
+  "Cambridge, USA": { lat: 42.360266033199515, lon: -71.09411460368025 },
 };
