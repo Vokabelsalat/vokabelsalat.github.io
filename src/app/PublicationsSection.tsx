@@ -6,6 +6,24 @@ import { PublicationEntry } from "./PublicationEntry";
 export const publications: Publication[] = [
   {
     title:
+      "Learning by Seeing: Visualization-supported Re-enactment and Understanding of Story Generation",
+    year: "2026",
+    authors:
+      "J. Kusnick",
+    reference: "9th Internation The Computational Models of Narrative (CMN'26)",
+    doi: "Visual_Narrative_Nubs__CMN26.pdf",
+  },
+  {
+    title:
+      "Off the Beaten Plot: A Survey of Underexplored Story Generation Systems and Aspects",
+    year: "2026",
+    authors:
+      "N. Montfort, and J. Kusnick",
+    reference: "9th Internation The Computational Models of Narrative (CMN'26)",
+    doi: "Off_the_Beaten_Plot__CMN_26.pdf",
+  },
+  {
+    title:
       "A Narrative Visualization Tool for Personalized Exploration of Long-Distance Hiking Trails",
     year: "2025",
     authors:

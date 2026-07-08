@@ -78,10 +78,10 @@ export const workshops: Workshop[] = [
     institution: "MIT - Massachusetts Institute of Technology",
     authors: "J. Kusnick",
     location: "Cambridge, USA",
-    date: "9. - 22. March. 2026",
+    date: "9.–22. March. 2026",
     details: [
       "Research Stay at the MIT Trope Tank",
-      "Hosted by Prof. Nick Monfort"
+      "Hosted by Prof. Nick Montfort"
     ],
     link: "https://tropetank.com",
     type: "range",
