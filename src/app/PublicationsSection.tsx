@@ -24,6 +24,15 @@ export const publications: Publication[] = [
   },
   {
     title:
+      "A Survey on Visualization-based Storytelling in Digital Humanities and Cultural Heritage",
+    year: "2026",
+    authors:
+      "J. Kusnick, N. S. Andersen, J. Liem, E. Mayr, S. Beck, S. Koch, C. Doppler, K. Seirafi, S. Jänicke, and F. Windhager",
+    reference: "Visual Informatics 10 (2), 2026",
+    doi: "https://doi.org/10.1016/j.visinf.2026.100312",
+  },
+  {
+    title:
       "A Narrative Visualization Tool for Personalized Exploration of Long-Distance Hiking Trails",
     year: "2025",
     authors:
