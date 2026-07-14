@@ -13,5 +13,6 @@ export const cityCoordinates: Record<string, { lat: number; lon: number }> = {
   "Bergen, Norway": {lat: 60.389444, lon: 5.33 },
   "Tarsia, Italy": {lat: 39.583333, lon: 16.244167 },
   "Cambridge, USA": { lat: 42.360266033199515, lon: -71.09411460368025 },
-  "Daejeon, South Korea": { lat:36.35, lon: 127.385 },
+  "Daejeon, South Korea": { lat: 36.35, lon: 127.385 },
+  "Booklyn, New York, USA": { lat: 40.69238535092381, lon: -73.92744906145819 },
 };

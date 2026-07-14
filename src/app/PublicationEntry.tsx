@@ -6,6 +6,16 @@ interface PublicationEntryProps {
   publication: Publication;
 }
 
+const renderAuthors = (authors: string) =>
+  authors.split("J. Kusnick").map((part, index, parts) => (
+    <React.Fragment key={index}>
+      {part}
+      {index < parts.length - 1 && (
+        <span className="underline">J. Kusnick</span>
+      )}
+    </React.Fragment>
+  ));
+
 export const PublicationEntry: React.FC<PublicationEntryProps> = ({
   publication,
 }) => {
@@ -18,7 +28,9 @@ export const PublicationEntry: React.FC<PublicationEntryProps> = ({
         <p>{publication.year}</p>
       </div>
       <div className="flex overflow-hidden gap-8 justify-between items-start w-full mt-1">
-        <div className="text-xs text-neutral-700">{publication.authors}</div>
+        <div className="text-xs text-neutral-700">
+          {renderAuthors(publication.authors)}
+        </div>
         {publication.doi && (
           <a
             href={publication.doi}

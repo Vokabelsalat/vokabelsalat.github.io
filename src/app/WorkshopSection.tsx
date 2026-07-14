@@ -102,6 +102,16 @@ export const workshops: Workshop[] = [
     end: new Date("2026-03-22"),
   },
   {
+    title: "Open projector presentation on Visual Narrative Nubs",
+    institution: "WordHack at Wonderville",
+    authors: "J. Kusnick",
+    location: "Booklyn, New York, USA",
+    date: "19. Mar. 2026",
+    link: "https://www.wonderville.nyc/events/wordhack-3-19-26",
+    type: "point",
+    start: new Date("2026-03-19"),
+  },
+  {
     title: "Mapping Algae: Connecting Farmers, Products, and Markets",
     institution: "EX-AQUA",
     authors: "J. Kusnick",
