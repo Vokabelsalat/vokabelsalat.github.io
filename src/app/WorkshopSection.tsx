@@ -75,7 +75,7 @@ export const workshops: Workshop[] = [
   //   // Johannes Liem, Jakob Kusnick, Steffan Jänicke, Carina Doppler, Markus Passecker, Eva Mayr, Florian Windhager Data Driven Storytelling zu kulturellen Objekten und Biographien 14.3.2023 Luxemburg
   {
     title: "Seeing Stories Think: Visual Interfaces for Understanding Algorithmic Storytelling",
-    institution: "Korean Association for Digital Humanities (KADH)",
+    institution: "Part of the Digital Humanities Conference 2026, 27.-31. Jul. 2026",
     authors: "J. Kusnick",
     location: "Daejeon, South Korea",
     date: "29. Jul. 2026",
