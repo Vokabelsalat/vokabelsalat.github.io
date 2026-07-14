@@ -19,7 +19,7 @@ type SectionLink = {
 
 const contactLinks: ContactLink[] = [
   {
-    href: "mailto:kusnick@imada.sdu.dk",
+    href: "mailto:jakob@kusnick.com",
     label: "Mail",
     icon: <EnvelopeIcon className="size-5" />,
   },
@@ -57,8 +57,8 @@ const sectionLinks: SectionLink[] = [
   { href: "#teaching", label: "Teaching" },
   { href: "#publications", label: "Publications" },
   { href: "#projects", label: "Projects" },
+  { href: "#presentations", label: "Presentations" },
   { href: "#extracurricular", label: "Extra" },
-  { href: "#workshops", label: "Workshops" },
   { href: "#portfolio", label: "Portfolio" },
 ];
 

@@ -169,11 +169,11 @@ export default function Page(): JSX.Element {
           <div id="projects" className="scroll-mt-37 section">
             <ProjectSection />
           </div>
+          <div id="presentations" className="scroll-mt-37 section">
+            <WorkshopSection />
+          </div>
           <div id="extracurricular" className="scroll-mt-37 section">
             <ExtracurricularSection />
-          </div>
-          <div id="workshops" className="scroll-mt-37 section">
-            <WorkshopSection />
           </div>
           <div id="portfolio" className="scroll-mt-37 section">
             <PortfolioSection />

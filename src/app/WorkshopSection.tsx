@@ -74,11 +74,24 @@ export const workshops: Workshop[] = [
   //   },
   //   // Johannes Liem, Jakob Kusnick, Steffan Jänicke, Carina Doppler, Markus Passecker, Eva Mayr, Florian Windhager Data Driven Storytelling zu kulturellen Objekten und Biographien 14.3.2023 Luxemburg
   {
+    title: "Seeing Stories Think: Visual Interfaces for Understanding Algorithmic Storytelling",
+    institution: "Korean Association for Digital Humanities (KADH)",
+    authors: "J. Kusnick",
+    location: "Daejeon, South Korea",
+    date: "29. Jul. 2026",
+    details: [
+      "Poster"
+    ],
+    link: "/SeeingStoriesThink.pdf",
+    type: "point",
+    start: new Date("2026-07-29"),
+  },
+  {
     title: "Research Stay",
     institution: "MIT - Massachusetts Institute of Technology",
     authors: "J. Kusnick",
     location: "Cambridge, USA",
-    date: "9.–22. March. 2026",
+    date: "9.–22. Mar. 2026",
     details: [
       "Research Stay at the MIT Trope Tank",
       "Hosted by Prof. Nick Montfort"
@@ -204,7 +217,7 @@ export const WorkshopSection: React.FC = () => {
   return (
     <section className="flex overflow-hidden flex-col px-6 py-2.5 w-full text-neutral-700 max-md:px-5 max-md:max-w-full">
       <h2 className="gap-2.5 self-start text-lg font-[Montserrat]">
-        Presentations & Workshops
+        Presentations & Workshops & Others
       </h2>
       <div className="w-full text-xs max-md:max-w-full">
         {workshops.map((workshop, index) => (
