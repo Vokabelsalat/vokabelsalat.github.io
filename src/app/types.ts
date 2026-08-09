@@ -1,6 +1,7 @@
 export type EventType = "Position" | "Presentation" | "Publication" | "Teaching";
 
 export interface MyEvent {
+  id: string;
   title: string;
   coordinates: { lat: number, lon: number }
   location: string;

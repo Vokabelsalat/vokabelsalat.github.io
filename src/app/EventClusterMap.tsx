@@ -3,8 +3,10 @@ import "maplibre-gl/dist/maplibre-gl.css"; // See notes below
 import type { MapRef } from "@vis.gl/react-maplibre";
 import { Layer, Map, Marker, Source } from "@vis.gl/react-maplibre";
 import { JSX, useCallback, useMemo, useRef, useState } from "react";
+import type { GeoJSONSource } from "maplibre-gl";
 import { Category } from "./page";
 import { EventType, EventTypeColors, MyEvent } from "./types";
+import { useVisualizationInteraction } from "./VisualizationInteractionContext";
 
 interface MyGeometry {
   coordinates: { lat: number; lon: number };
@@ -13,12 +15,13 @@ interface MyGeometry {
 type MapEventType = Exclude<EventType, "Publication">;
 
 function createDonutChart(
-  props: Record<string, object>,
+  props: Record<string, unknown>,
   dataKeys: Array<string>,
   colors: Record<string, unknown>,
   onMouseEnter: () => void,
   onMouseLeave: () => void,
   id: string,
+  isHighlighted: boolean,
 ) {
   const offsets: Array<number> = [];
 
@@ -49,10 +52,11 @@ function createDonutChart(
 
   return (
     <div
-      className="hover:scale-150"
+      className={`transition-transform hover:scale-150 ${
+        isHighlighted ? "scale-150" : ""
+      }`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      onMouseMove={onMouseEnter}
       id={id}
       key={id}
     >
@@ -134,11 +138,24 @@ export default function EventClusterMap(props: {
   categories: Array<Category>;
 }): JSX.Element {
   const mapRef = useRef<MapRef>(null);
+  const hoverRequestRef = useRef(0);
+  const clusterEventIdsRef = useRef(
+    new globalThis.Map<number, string[] | null>(),
+  );
+  const [, setClusterMembershipVersion] = useState(0);
   const [isClustering] = useState(true);
+  const { hoveredIds, setHoveredIds } = useVisualizationInteraction();
 
   const { events, categories } = props;
 
-  const [donutClusterMarkers, setDonutClusterMarkers] = useState<Array<JSX.Element>>([]);
+  const [donutClusterMarkers, setDonutClusterMarkers] = useState<
+    Array<{
+      key: string;
+      longitude: number;
+      latitude: number;
+      properties: Record<string, unknown>;
+    }>
+  >([]);
 
   const [mapMarkers, eventTypes] = useMemo(() => {
     const markers = [];
@@ -155,7 +172,11 @@ export default function EventClusterMap(props: {
       if (event.coordinates) {
         const newMarker: GeoJSON.Feature<GeoJSON.Point, MyEvent> = {
           type: "Feature" as const,
-          properties: { ...event, type: normalizedType, [normalizedType]: 1 },
+          properties: {
+            ...event,
+            type: normalizedType,
+            [normalizedType]: 1,
+          },
           geometry: {
             type: "Point",
             coordinates: [event.coordinates.lon, event.coordinates.lat],
@@ -172,17 +193,16 @@ export default function EventClusterMap(props: {
     const newMarkers = [];
     if (mapRef.current != null) {
       const features = mapRef.current.querySourceFeatures("events-source");
-      const clusterPropertiesKey = Object.keys(eventTypes);
-
-      const categoryColors: Record<string, string> = {};
-      for (const item of categories) {
-        categoryColors[item.label] = item.color;
-      }
 
       let index = 0;
-      const clusteredIDs: Array<string> = [];
+      const clusteredIDs: Array<number> = [];
       for (const feat of features) {
-        const markerKey = `marker-${index}`;
+        const properties = (feat.properties ?? {}) as Record<string, unknown>;
+        const clusterId = properties.cluster_id as number | undefined;
+        const eventId = properties.id as string | undefined;
+        const markerKey = clusterId == null
+          ? `event-${eventId ?? index}`
+          : `cluster-${clusterId}`;
 
         // const onMouseLeave = () => {
         //   updateTooltip(null);
@@ -232,51 +252,106 @@ export default function EventClusterMap(props: {
         // };
 
         if (
-          feat.properties.cluster_id == null ||
-          !clusteredIDs.includes(feat.properties.cluster_id)
+          clusterId == null ||
+          !clusteredIDs.includes(clusterId)
         ) {
           const point = feat.geometry as GeoJSON.Point;
           newMarkers.push(
-            <Marker
-              key={markerKey}
-              longitude={point.coordinates[0]}
-              latitude={point.coordinates[1]}
-              anchor="center"
-              onClick={(e) => {
-                e.originalEvent.stopPropagation();
-                if (feat && feat.properties) {
-                  const sitesArray = [
-                    ...new Set(feat.properties.sites.split(" ")),
-                  ];
-                  const newSitesText =
-                    sitesArray.length > 20
-                      ? `${sitesArray.slice(0, 20).join(", ")} +${sitesArray.length - 20} more`
-                      : sitesArray.join(", ");
-
-                  feat.properties.sitesText = newSitesText;
-                  // setPopupInfo(feat);
-                }
-              }}
-            >
-              {createDonutChart(
-                feat.properties,
-                clusterPropertiesKey,
-                categoryColors,
-                () => { },
-                () => { },
-                // onMouseEnter,
-                // onMouseLeave,
-                markerKey,
-              )}
-            </Marker>,
+            {
+              key: markerKey,
+              longitude: point.coordinates[0],
+              latitude: point.coordinates[1],
+              properties,
+            },
           );
-          clusteredIDs.push(feat.properties.cluster_id);
+          if (clusterId != null) clusteredIDs.push(clusterId);
         }
         index = index + 1;
       }
     }
     setDonutClusterMarkers(newMarkers);
-  }, [eventTypes, categories]);
+
+    const source = mapRef.current?.getSource("events-source") as
+      | GeoJSONSource
+      | undefined;
+    if (source) {
+      for (const marker of newMarkers) {
+        const clusterId = marker.properties.cluster_id;
+        if (
+          typeof clusterId !== "number" ||
+          clusterEventIdsRef.current.has(clusterId)
+        ) {
+          continue;
+        }
+
+        clusterEventIdsRef.current.set(clusterId, null);
+        const pointCount = Number(marker.properties.point_count) || 0;
+        void source
+          .getClusterLeaves(clusterId, pointCount, 0)
+          .then((leaves) => {
+            clusterEventIdsRef.current.set(
+              clusterId,
+              leaves.flatMap((leaf) => {
+                const id = leaf.properties?.id;
+                return typeof id === "string" ? [id] : [];
+              }),
+            );
+            setClusterMembershipVersion((version) => version + 1);
+          })
+          .catch(() => {
+            clusterEventIdsRef.current.delete(clusterId);
+          });
+      }
+    }
+  }, []);
+
+  const handleMarkerMouseEnter = useCallback(
+    async (properties: Record<string, unknown>) => {
+      const requestId = ++hoverRequestRef.current;
+      const clusterId = properties.cluster_id;
+
+      if (typeof clusterId !== "number") {
+        const eventId = properties.id;
+        setHoveredIds(typeof eventId === "string" ? [eventId] : []);
+        return;
+      }
+
+      const cachedIds = clusterEventIdsRef.current.get(clusterId);
+      if (cachedIds) {
+        setHoveredIds(cachedIds);
+        return;
+      }
+
+      const source = mapRef.current?.getSource("events-source") as
+        | GeoJSONSource
+        | undefined;
+      if (!source) return;
+
+      const pointCount =
+        typeof properties.point_count === "number"
+          ? properties.point_count
+          : Number(properties.point_count) || 0;
+      try {
+        const leaves = await source.getClusterLeaves(clusterId, pointCount, 0);
+        if (hoverRequestRef.current !== requestId) return;
+
+        setHoveredIds(
+          leaves.flatMap((leaf) => {
+            const id = leaf.properties?.id;
+            return typeof id === "string" ? [id] : [];
+          }),
+        );
+      } catch {
+        if (hoverRequestRef.current === requestId) setHoveredIds([]);
+      }
+    },
+    [setHoveredIds],
+  );
+
+  const handleMarkerMouseLeave = useCallback(() => {
+    hoverRequestRef.current += 1;
+    setHoveredIds([]);
+  }, [setHoveredIds]);
 
   return (
     <Map
@@ -328,15 +403,59 @@ export default function EventClusterMap(props: {
           paint={{ "circle-radius": 0 }}
           source="events-source"
         />
-        {donutClusterMarkers}
+        {donutClusterMarkers.map((marker) => {
+          const markerEventId = marker.properties.id;
+          const clusterId = marker.properties.cluster_id;
+          const markerIds: string[] =
+            typeof clusterId === "number"
+              ? clusterEventIdsRef.current.get(clusterId) ?? []
+              : typeof markerEventId === "string"
+                ? [markerEventId]
+                : [];
+          const isHighlighted = markerIds.some((id) => hoveredIds.includes(id));
+
+          return (
+            <Marker
+              key={marker.key}
+              longitude={marker.longitude}
+              latitude={marker.latitude}
+              anchor="center"
+            >
+              {createDonutChart(
+                marker.properties,
+                Object.keys(eventTypes),
+                Object.fromEntries(
+                  categories.map((category) => [category.label, category.color]),
+                ),
+                () => void handleMarkerMouseEnter(marker.properties),
+                handleMarkerMouseLeave,
+                marker.key,
+                isHighlighted,
+              )}
+            </Marker>
+          );
+        })}
       </Source>
       <div className="absolute top-1 right-1 p-1 shadow-md rounded-md flex flex-col bg-white/50 text-neutral-700">
         <b>Legend</b>
         {Object.keys(eventTypes).map((type, i) => {
+          const idsForType = events
+            .filter((event) => {
+              const normalizedType =
+                event.type === "Publication" ? "Presentation" : event.type;
+              return normalizedType === type;
+            })
+            .map((event) => event.id);
+
           return (
             <div
               key={`type-legend-${i}`}
-              className="w-full flex flex-row items-center gap-1"
+              className="w-full flex flex-row items-center gap-1 cursor-pointer"
+              onMouseEnter={() => {
+                hoverRequestRef.current += 1;
+                setHoveredIds(idsForType);
+              }}
+              onMouseLeave={handleMarkerMouseLeave}
             >
               <div
                 className="size-1 rounded-full"

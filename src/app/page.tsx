@@ -29,34 +29,39 @@ import {
   Workshop,
 } from "./types";
 import { PortfolioSection } from "./PortfolioSection";
+import { VisualizationInteractionProvider } from "./VisualizationInteractionContext";
 
 const allEvents: Array<MyEvent> = [
-  ...positions.map((e) => {
+  ...positions.map((e, index) => {
     return {
+      id: `position-${index}`,
       title: e.title,
       coordinates: cityCoordinates[e.location],
       location: e.location,
       type: "Position" as EventType,
     };
   }),
-  ...teachings.map((e) => {
+  ...teachings.map((e, index) => {
     return {
+      id: `teaching-${index}`,
       title: e.title,
       coordinates: cityCoordinates[e.location],
       location: e.location,
       type: "Teaching" as EventType,
     };
   }),
-  ...extras.map((e) => {
+  ...extras.map((e, index) => {
     return {
+      id: `extracurricular-${index}`,
       title: e.title,
       coordinates: cityCoordinates[e.location],
       location: e.location,
       type: "Position" as EventType,
     };
   }),
-  ...workshops.map((e) => {
+  ...workshops.map((e, index) => {
     return {
+      id: `presentation-${index}`,
       title: e.title,
       coordinates: cityCoordinates[e.location],
       location: e.location,
@@ -69,6 +74,7 @@ export type Category = {
   id: string;
   label: string;
   color: string;
+  hoverIds?: string[];
   items: Array<
     (Position | Workshop | Publication) & {
       label: string;
@@ -87,6 +93,9 @@ export default function Page(): JSX.Element {
         id: "position",
         label: "Position",
         color: EventTypeColors["Position"], // optional, per-category default
+        hoverIds: allEvents
+          .filter((event) => event.type === "Position")
+          .map((event) => event.id),
         items: positions.map((position, index) => ({
           ...position,
           label: position.title,
@@ -98,6 +107,7 @@ export default function Page(): JSX.Element {
         id: "publication",
         label: "Publication",
         color: EventTypeColors["Publication"], // optional, per-category default
+        hoverIds: publications.map((_, index) => `publication-${index}`),
         items: publications.map((publication, index) => ({
           ...publication,
           label: publication.title,
@@ -110,10 +120,13 @@ export default function Page(): JSX.Element {
         id: "presentation",
         label: "Presentation",
         color: EventTypeColors["Presentation"], // optional, per-category default
+        hoverIds: allEvents
+          .filter((event) => event.type === "Presentation")
+          .map((event) => event.id),
         items: workshops.map((teaching, index) => ({
           ...teaching,
           label: teaching.title,
-          id: `teaching-${index}`, // Assign a unique id
+          id: `presentation-${index}`, // Assign a unique id
           end: teaching.end || new Date(), // Ensure end is always a Date
         })),
       },
@@ -121,6 +134,9 @@ export default function Page(): JSX.Element {
         id: "teaching",
         label: "Teaching",
         color: EventTypeColors["Teaching"], // optional, per-category default
+        hoverIds: allEvents
+          .filter((event) => event.type === "Teaching")
+          .map((event) => event.id),
         items: teachings.map((teaching, index) => ({
           ...teaching,
           label: teaching.title,
@@ -132,54 +148,56 @@ export default function Page(): JSX.Element {
   }, []);
 
   return (
-    <main className="flex items-center pt-4 bg-white justify-center">
-      <article className="max-w-3xl flex-1 shrink pb-4 w-full basis-0 relative">
-        <ProfileHeader />
-        <div className="relative">
-          <div id="biography" className="scroll-mt-37 section">
-            <BiographySection />
-          </div>
-          <div id="overview" className="scroll-mt-37 section">
-            <div className="w-full h-48">
-              <EventClusterMap events={allEvents} categories={categories} />
+    <VisualizationInteractionProvider>
+      <main className="flex items-center pt-4 bg-white justify-center">
+        <article className="max-w-3xl flex-1 shrink pb-4 w-full basis-0 relative">
+          <ProfileHeader />
+          <div className="relative">
+            <div id="biography" className="scroll-mt-37 section">
+              <BiographySection />
             </div>
-            <div className="w-full hidden lg:block">
-              {/* <EventTimeline events={allEvents} /> */}
-              <MultiRowTimeline
-                categories={categories}
-                domainPaddingDays={10}
-                rowHeight={30}
-                tickEvery={"month"}
-                onItemClick={(item) => console.log(item)}
-              />
+            <div id="overview" className="scroll-mt-37 section">
+              <div className="w-full h-48">
+                <EventClusterMap events={allEvents} categories={categories} />
+              </div>
+              <div className="w-full hidden lg:block">
+                {/* <EventTimeline events={allEvents} /> */}
+                <MultiRowTimeline
+                  categories={categories}
+                  domainPaddingDays={10}
+                  rowHeight={30}
+                  tickEvery={"month"}
+                  onItemClick={(item) => console.log(item)}
+                />
+              </div>
+            </div>
+            <div id="positions" className="scroll-mt-37 section">
+              <PositionsSection />
+            </div>
+            <div id="skills" className="scroll-mt-37 section">
+              <InterestsSkillsSection />
+            </div>
+            <div id="teaching" className="scroll-mt-37 section">
+              <TeachingSection />
+            </div>
+            <div id="publications" className="scroll-mt-37 section">
+              <PublicationsSection />
+            </div>
+            <div id="projects" className="scroll-mt-37 section">
+              <ProjectSection />
+            </div>
+            <div id="presentations" className="scroll-mt-37 section">
+              <WorkshopSection />
+            </div>
+            <div id="extracurricular" className="scroll-mt-37 section">
+              <ExtracurricularSection />
+            </div>
+            <div id="portfolio" className="scroll-mt-37 section">
+              <PortfolioSection />
             </div>
           </div>
-          <div id="positions" className="scroll-mt-37 section">
-            <PositionsSection />
-          </div>
-          <div id="skills" className="scroll-mt-37 section">
-            <InterestsSkillsSection />
-          </div>
-          <div id="teaching" className="scroll-mt-37 section">
-            <TeachingSection />
-          </div>
-          <div id="publications" className="scroll-mt-37 section">
-            <PublicationsSection />
-          </div>
-          <div id="projects" className="scroll-mt-37 section">
-            <ProjectSection />
-          </div>
-          <div id="presentations" className="scroll-mt-37 section">
-            <WorkshopSection />
-          </div>
-          <div id="extracurricular" className="scroll-mt-37 section">
-            <ExtracurricularSection />
-          </div>
-          <div id="portfolio" className="scroll-mt-37 section">
-            <PortfolioSection />
-          </div>
-        </div>
-      </article>
-    </main>
+        </article>
+      </main>
+    </VisualizationInteractionProvider>
   );
 }

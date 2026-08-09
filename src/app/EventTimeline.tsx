@@ -12,6 +12,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import * as d3 from "d3";
+import { useVisualizationInteraction } from "./VisualizationInteractionContext";
 
 /**
  * MultiRowTimeline
@@ -69,6 +70,8 @@ export type TimelineCategory = {
   label: string;
   color?: string; // default color for items in this category
   items: TimelineItem[];
+  /** IDs linked to this category across all visualizations. */
+  hoverIds?: string[];
 };
 
 export type TickEvery = "year" | "quarter" | "month" | "week" | "day" | number; // number means fixed count
@@ -256,6 +259,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
   showLegend = false,
   className,
 }) => {
+  const { hoveredIds, setHoveredIds } = useVisualizationInteraction();
   const svgRef = useRef<SVGSVGElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const bounds = useResizeObserver(wrapperRef);
@@ -633,8 +637,12 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                         <g
                           key={`timeline-event-${item.id}`}
                           className="cursor-pointer group"
+                          onMouseEnter={() => setHoveredIds([item.id])}
                           onMouseMove={(e) => handleMouse(e, item)}
-                          onMouseLeave={hideTooltip}
+                          onMouseLeave={() => {
+                            hideTooltip();
+                            setHoveredIds([]);
+                          }}
                           onClick={() => onItemClick?.(item, cat)}
                         >
                           <rect
@@ -644,7 +652,10 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                             height={ItemHeight}
                             rx={4}
                             ry={4}
-                            className="opacity-50 group-hover:opacity-100"
+                            className={`transition-opacity ${hoveredIds.includes(item.id)
+                              ? "opacity-100"
+                              : "opacity-50 group-hover:opacity-100"
+                              }`}
                             fill={item.color ?? cat.color ?? "#94a3b833"}
                           />
                           {w > 40 && item.label && (
@@ -674,16 +685,23 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                           <g
                             key={`timeline-circle-${i}`}
                             className="cursor-pointer"
+                            onMouseEnter={() => setHoveredIds([item.id])}
+                            onMouseLeave={() => {
+                              hideTooltip();
+                              setHoveredIds([]);
+                            }}
                           >
                             <circle
                               cx={cx}
                               cy={cy}
-                              r={dotRadius}
+                              r={hoveredIds.includes(item.id) ? dotRadius * 2 : dotRadius}
                               fill={item.color ?? cat.color ?? "#334155"}
+                              // className={`transition-transform origin-center ${
+                              //   hoveredIds.includes(item.id) ? "scale-150" : ""
+                              // }`}
                               onMouseMove={(e) =>
                                 handleMouse(e, item as TimelineEvent)
                               }
-                              onMouseLeave={hideTooltip}
                               onClick={() => onItemClick?.(item, cat)}
                             />
                             {item.label && (
@@ -700,7 +718,16 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                       })}
                   </g>
                   {/* Row label */}
-                  <g transform={`translate(0, 0)`}>
+                  <g
+                    transform={`translate(0, 0)`}
+                    className="cursor-pointer"
+                    onMouseEnter={() =>
+                      setHoveredIds(
+                        cat.hoverIds ?? cat.items.map((item) => item.id),
+                      )
+                    }
+                    onMouseLeave={() => setHoveredIds([])}
+                  >
                     <foreignObject
                       x={0}
                       y={-2}
@@ -745,7 +772,14 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
         {showLegend && (
           <div className="flex flex-wrap gap-3 px-4 py-3 border-t bg-gray-50">
             {categories.map((c) => (
-              <div key={c.id} className="flex items-center gap-2 text-sm">
+              <div
+                key={c.id}
+                className="flex items-center gap-2 text-sm cursor-pointer"
+                onMouseEnter={() =>
+                  setHoveredIds(c.hoverIds ?? c.items.map((item) => item.id))
+                }
+                onMouseLeave={() => setHoveredIds([])}
+              >
                 <span
                   className="inline-block w-3 h-3 rounded"
                   style={{ backgroundColor: c.color ?? "#64748b" }}
