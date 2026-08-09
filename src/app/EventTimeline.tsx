@@ -659,14 +659,24 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                             fill={item.color ?? cat.color ?? "#94a3b833"}
                           />
                           {w > 40 && item.label && (
-                            <text
-                              x={x1 + 6}
-                              y={itemY + ItemHeight / 2}
-                              className="fill-white text-[11px] select-none pointer-events-none"
-                              dominantBaseline="middle"
+                            <svg
+                              x={x1}
+                              y={itemY}
+                              width={w}
+                              height={ItemHeight}
+                              viewBox={`0 0 ${w} ${ItemHeight}`}
+                              overflow="hidden"
+                              className="pointer-events-none"
                             >
-                              {item.label}
-                            </text>
+                              <text
+                                x={6}
+                                y={ItemHeight / 2}
+                                className="fill-white text-[11px] select-none"
+                                dominantBaseline="middle"
+                              >
+                                {item.label}
+                              </text>
+                            </svg>
                           )}
                         </g>
                       );
