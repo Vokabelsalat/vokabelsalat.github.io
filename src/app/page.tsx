@@ -149,7 +149,7 @@ export default function Page(): JSX.Element {
 
   return (
     <VisualizationInteractionProvider>
-      <main className="flex items-center pt-4 bg-white justify-center">
+      <main className="flex items-center pt-4 bg-surface justify-center">
         <article className="max-w-3xl flex-1 shrink pb-4 w-full basis-0 relative">
           <ProfileHeader />
           <div className="relative">

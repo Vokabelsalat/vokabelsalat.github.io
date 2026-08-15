@@ -52,9 +52,8 @@ function createDonutChart(
 
   return (
     <div
-      className={`transition-transform hover:scale-150 ${
-        isHighlighted ? "scale-150" : ""
-      }`}
+      className={`transition-transform hover:scale-150 ${isHighlighted ? "scale-150" : ""
+        }`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       id={id}
@@ -70,7 +69,7 @@ function createDonutChart(
           cx={r}
           cy={r}
           r={r}
-          fill="white"
+          className="fill-surface"
           fillOpacity={0.65}
           stroke={"none"}
         ></circle>
@@ -87,7 +86,7 @@ function createDonutChart(
           })}
         </g>
         {(props.point_count as unknown as number) > 1 && (
-          <text dominantBaseline="central" transform={`translate(${r}, ${r})`}>
+          <text className="fill-content" dominantBaseline="central" transform={`translate(${r}, ${r})`}>
             {total.toLocaleString()}
           </text>
         )}
@@ -436,7 +435,7 @@ export default function EventClusterMap(props: {
           );
         })}
       </Source>
-      <div className="absolute top-1 right-1 p-1 shadow-md rounded-md flex flex-col bg-white/50 text-neutral-700">
+      <div className="absolute top-1 right-1 p-1 shadow-md rounded-md flex flex-col bg-surface/80 text-content">
         <b>Legend</b>
         {Object.keys(eventTypes).map((type, i) => {
           const idsForType = events

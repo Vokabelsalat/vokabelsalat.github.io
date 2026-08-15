@@ -74,7 +74,7 @@ const teachings: Position[] = [
 
 export const ProjectSection: React.FC = () => {
   return (
-    <section className="flex overflow-hidden flex-col px-6 py-2.5 w-full text-neutral-700 max-md:px-5 max-md:max-w-full">
+    <section className="flex overflow-hidden flex-col px-6 py-2.5 w-full text-content max-md:px-5 max-md:max-w-full">
       <h2 className="gap-2.5 self-start text-lg font-[Montserrat]">Projects</h2>
       <div className="w-full text-xs max-md:max-w-full">
         {teachings.map((teaching, index) => (
@@ -99,7 +99,7 @@ export const ProjectSection: React.FC = () => {
               <Link
                 target="_blank"
                 href={teaching.link}
-                className="text-blue-400 hover:text-black"
+                className="text-link hover:text-link-hover"
               // className="overflow-hidden w-full max-md:max-w-full italic mt-0.5"
               >
                 {teaching.link}

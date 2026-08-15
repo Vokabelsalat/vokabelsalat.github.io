@@ -21,20 +21,20 @@ export const PublicationEntry: React.FC<PublicationEntryProps> = ({
 }) => {
   return (
     <article className="py-2 w-full max-md:max-w-full">
-      <div className="flex overflow-hidden justify-between items-start w-full text-xs text-neutral-700 max-md:max-w-full gap-5">
+      <div className="flex overflow-hidden justify-between items-start w-full text-xs text-content max-md:max-w-full gap-5">
         <h3 className="flex-1 shrink font-bold basis-0 max-md:max-w-full">
           {publication.title}
         </h3>
         <p>{publication.year}</p>
       </div>
       <div className="flex overflow-hidden gap-8 justify-between items-start w-full mt-1">
-        <div className="text-xs text-neutral-700">
+        <div className="text-xs text-content">
           {renderAuthors(publication.authors)}
         </div>
         {publication.doi && (
           <a
             href={publication.doi}
-            className="text-xs text-blue-400 hover:text-black"
+            className="text-xs text-link hover:text-link-hover"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -42,7 +42,7 @@ export const PublicationEntry: React.FC<PublicationEntryProps> = ({
           </a>
         )}
       </div>
-      <p className="overflow-hidden flex-1 shrink w-full text-xs basis-0 text-neutral-700 max-md:max-w-full mt-0.5 italic">
+      <p className="overflow-hidden flex-1 shrink w-full text-xs basis-0 text-content max-md:max-w-full mt-0.5 italic">
         {publication.reference}
       </p>
     </article>

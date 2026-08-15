@@ -62,7 +62,7 @@ export const PortfolioSection: React.FC = () => {
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
 
   return (
-    <section className="flex flex-col text-neutral-700 px-6 py-2.5 text-xs">
+    <section className="flex flex-col text-content px-6 py-2.5 text-xs">
       <h2 className="self-start text-lg font-[Montserrat] mb-3">Portfolio</h2>
       <div className="flex flex-col gap-6.5">
         {entries.map((e, i) => {
@@ -105,7 +105,7 @@ export const PortfolioSection: React.FC = () => {
                         key={`link-${i}`}
                         href={link}
                         target="_blank"
-                        className="text-blue-400 hover:text-black"
+                        className="text-link hover:text-link-hover"
                       >
                         {link}
                       </a>

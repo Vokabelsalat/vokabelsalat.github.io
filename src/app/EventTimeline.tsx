@@ -390,7 +390,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
       )(item.end as Date)}`
       : `${d3.timeFormat("%b %d, %Y")(item.start as Date)}`;
 
-    const html = `<div class="text-neutral-700"><div class="font-medium">${title}</div><div class="opacity-80">${detail}</div><div class="mt-1">${item.tooltip ?? ""
+    const html = `<div class="text-content"><div class="font-medium">${title}</div><div class="opacity-80">${detail}</div><div class="mt-1">${item.tooltip ?? ""
       }</div></div>`;
     setTooltip({ x: sx + 10, y: sy - 10, html, visible: true });
   };
@@ -554,13 +554,13 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                   x2={innerWidth}
                   y1={0}
                   y2={0}
-                  className="stroke-gray-200"
+                  className="stroke-line"
                 />
                 {yearTicks.map((t, i) => (
                   <g key={`year-${i}`} transform={`translate(${x(t)},0)`}>
                     <text
                       y={-8}
-                      className="text-[10px] fill-gray-500 select-none"
+                      className="text-[10px] fill-content-muted select-none"
                       textAnchor="middle"
                     >
                       {yearFmt(t as Date)}
@@ -569,10 +569,10 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                 ))}
                 {ticks.map((t, i) => (
                   <g key={i} transform={`translate(${x(t)},0)`}>
-                    <line y1={0} y2={6} className="stroke-gray-300" />
+                    <line y1={0} y2={6} className="stroke-line" />
                     <text
                       dy={18}
-                      className="text-[11px] fill-gray-600 select-none"
+                      className="text-[11px] fill-content-muted select-none"
                       textAnchor="middle"
                     >
                       {fmt(t as Date)}
@@ -596,7 +596,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                   x2={x(t)}
                   y1={margins.top}
                   y2={height - margins.bottom}
-                  className="stroke-gray-100"
+                  className="stroke-line opacity-60"
                 />
               ))}
             </g>
@@ -623,7 +623,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                       x2={innerWidth}
                       y1={rowHeightPx / 2}
                       y2={rowHeightPx / 2}
-                      className="stroke-gray-200"
+                      className="stroke-line"
                     />
 
                     {/* Ranges first, then points on top */}
@@ -718,7 +718,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                               <text
                                 x={cx + dotRadius + 4}
                                 y={cy + 4}
-                                className="text-[11px] fill-gray-800 select-none"
+                                className="text-[11px] fill-content select-none"
                               >
                                 {/* {item.title} */}
                               </text>
@@ -744,8 +744,8 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                       width={labelWidth}
                       height={rowHeightPx}
                     >
-                      <div className="h-full flex items-center justify-start px-1 bg-gray-100">
-                        <div className="flex items-center gap-2 text-xs font-medium text-gray-800">
+                      <div className="h-full flex items-center justify-start px-1 bg-surface-muted">
+                        <div className="flex items-center gap-2 text-xs font-medium text-content">
                           <span
                             className="inline-block w-3 h-3 rounded"
                             style={{ backgroundColor: cat.color ?? "#64748b" }}
@@ -766,7 +766,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
           {tooltip.visible && (
             <div
               id="tooltip-wrapper"
-              className="pointer-events-none absolute rounded-lg border bg-white p-2 shadow-md z-50 select-none"
+              className="pointer-events-none absolute rounded-lg border border-line bg-surface p-2 text-content shadow-md z-50 select-none"
               style={{
                 left: tooltip.x,
                 top: tooltip.y,
@@ -780,7 +780,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
 
         {/* Legend */}
         {showLegend && (
-          <div className="flex flex-wrap gap-3 px-4 py-3 border-t bg-gray-50">
+          <div className="flex flex-wrap gap-3 px-4 py-3 border-t border-line bg-surface-muted">
             {categories.map((c) => (
               <div
                 key={c.id}
@@ -794,7 +794,7 @@ const MultiRowTimeline: React.FC<MultiRowTimelineProps> = ({
                   className="inline-block w-3 h-3 rounded"
                   style={{ backgroundColor: c.color ?? "#64748b" }}
                 />
-                <span className="text-gray-700">{c.label}</span>
+                <span className="text-content">{c.label}</span>
               </div>
             ))}
           </div>

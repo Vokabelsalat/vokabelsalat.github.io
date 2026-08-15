@@ -87,7 +87,7 @@ export const positions: Position[] = [
 
 export const PositionsSection: React.FC = () => {
   return (
-    <section className="flex overflow-hidden flex-col px-6 py-2.5 w-full text-neutral-700 max-md:px-5 max-md:max-w-full">
+    <section className="flex overflow-hidden flex-col px-6 py-2.5 w-full text-content max-md:px-5 max-md:max-w-full">
       <h2 className="gap-2.5 self-start text-lg font-[Montserrat]">
         Positions & Education
       </h2>

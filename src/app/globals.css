@@ -1,13 +1,56 @@
 @import "tailwindcss";
 
 :root {
+  color-scheme: light;
   --background: #ffffff;
   --foreground: #171717;
+  --surface: #ffffff;
+  --surface-muted: #f5f5f5;
+  --content: #404040;
+  --content-muted: #525252;
+  --line: #e5e7eb;
+  --link: #3b82f6;
+  --link-hover: #171717;
+}
+
+:root.dark {
+  color-scheme: dark;
+  --background: #111315;
+  --foreground: #ededed;
+  --surface: #17191c;
+  --surface-muted: #202327;
+  --content: #e5e5e5;
+  --content-muted: #c4c4c4;
+  --line: #3a3e44;
+  --link: #60a5fa;
+  --link-hover: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    color-scheme: dark;
+    --background: #111315;
+    --foreground: #ededed;
+    --surface: #17191c;
+    --surface-muted: #202327;
+    --content: #e5e5e5;
+    --content-muted: #c4c4c4;
+    --line: #3a3e44;
+    --link: #60a5fa;
+    --link-hover: #ffffff;
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-content: var(--content);
+  --color-content-muted: var(--content-muted);
+  --color-line: var(--line);
+  --color-link: var(--link);
+  --color-link-hover: var(--link-hover);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -16,17 +59,17 @@
   --text-tiny: 0.625rem; 
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: "Open Sans";
+}
+
+body,
+main,
+header,
+.section {
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
 }
 
 html {
@@ -44,5 +87,15 @@ nextjs-portal {
 }
 
 .section:nth-child(even) {
-  background-color: #f5f5f5;
+  background-color: var(--surface-muted);
+}
+
+:root.dark .maplibregl-canvas {
+  filter: brightness(0.72) contrast(1.12) saturate(0.8);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) .maplibregl-canvas {
+    filter: brightness(0.72) contrast(1.12) saturate(0.8);
+  }
 }

@@ -139,7 +139,7 @@ export const publications: Publication[] = [
 export const PublicationsSection: React.FC = () => {
   return (
     <section className="flex overflow-hidden flex-col px-6 py-2.5 w-full max-md:px-5 max-md:max-w-full">
-      <h2 className="gap-2.5 self-start text-lg text-neutral-700 font-[Montserrat]">
+      <h2 className="gap-2.5 self-start text-lg text-content font-[Montserrat]">
         Selected Publications
       </h2>
 
@@ -148,13 +148,13 @@ export const PublicationsSection: React.FC = () => {
       ))}
 
       <div className="pt-5 pb-2 w-full max-md:max-w-full">
-        <p className="overflow-hidden flex-1 shrink w-full text-xs font-bold basis-0 text-neutral-700 max-md:max-w-full">
+        <p className="overflow-hidden flex-1 shrink w-full text-xs font-bold basis-0 text-content max-md:max-w-full">
           To find a complete list of publications please refer to:
         </p>
-        <div className="overflow-hidden mt-2.5 w-full text-xs text-blue-400 max-md:max-w-full">
+        <div className="overflow-hidden mt-2.5 w-full text-xs text-link max-md:max-w-full">
           <a
             href="https://scholar.google.de/citations?hl=de&user=9A5PfmYAAAAJ&view_op=list_works"
-            className="underline block hover:text-black"
+            className="underline block hover:text-link-hover"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -162,7 +162,7 @@ export const PublicationsSection: React.FC = () => {
           </a>
           <a
             href="https://portal.findresearcher.sdu.dk/en/persons/kusnick"
-            className="underline block mt-1 hover:text-black"
+            className="underline block mt-1 hover:text-link-hover"
             target="_blank"
             rel="noopener noreferrer"
           >
