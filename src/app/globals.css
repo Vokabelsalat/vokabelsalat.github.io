@@ -99,3 +99,8 @@ nextjs-portal {
     filter: brightness(0.72) contrast(1.12) saturate(0.8);
   }
 }
+
+.maplibregl-ctrl {
+  opacity: 0.8 !important;
+  background-color: transparent !important;
+}

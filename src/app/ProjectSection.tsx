@@ -42,7 +42,7 @@ const teachings: Position[] = [
     institution: "University of Southern Denmark",
     location: "Odense, Denmark",
     period: "Nov. 2019 - now",
-    link: "https://vises.sdu.dk",
+    link: "https://musecology.kusnick.com",
     type: "range",
     start: new Date(2019, 10, 1),
     end: new Date(),

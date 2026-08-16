@@ -14,6 +14,9 @@ interface MyGeometry {
 
 type MapEventType = Exclude<EventType, "Publication">;
 
+const CLUSTER_QUERY_LAYER_ID = "events-clusters-query";
+const UNCLUSTERED_QUERY_LAYER_ID = "events-unclustered-query";
+
 function createDonutChart(
   props: Record<string, unknown>,
   dataKeys: Array<string>,
@@ -191,7 +194,12 @@ export default function EventClusterMap(props: {
   const updateDonutClusterMarkers = useCallback(() => {
     const newMarkers = [];
     if (mapRef.current != null) {
-      const features = mapRef.current.querySourceFeatures("events-source");
+      // querySourceFeatures also exposes points that the clustered source has
+      // removed from the rendered result. Querying the backing layers keeps
+      // those cluster members from being rendered as standalone DOM markers.
+      const features = mapRef.current.queryRenderedFeatures({
+        layers: [CLUSTER_QUERY_LAYER_ID, UNCLUSTERED_QUERY_LAYER_ID],
+      });
 
       let index = 0;
       const clusteredIDs: Array<number> = [];
@@ -395,11 +403,19 @@ export default function EventClusterMap(props: {
         }}
       >
         <Layer
-          id="geojson-fill"
-          key={`geojson-fill-${isClustering}`}
+          id={UNCLUSTERED_QUERY_LAYER_ID}
+          key={`${UNCLUSTERED_QUERY_LAYER_ID}-${isClustering}`}
           type="circle"
           filter={["!", ["has", "point_count"]]}
-          paint={{ "circle-radius": 0 }}
+          paint={{ "circle-radius": 1, "circle-opacity": 0 }}
+          source="events-source"
+        />
+        <Layer
+          id={CLUSTER_QUERY_LAYER_ID}
+          key={`${CLUSTER_QUERY_LAYER_ID}-${isClustering}`}
+          type="circle"
+          filter={["has", "point_count"]}
+          paint={{ "circle-radius": 1, "circle-opacity": 0 }}
           source="events-source"
         />
         {donutClusterMarkers.map((marker) => {

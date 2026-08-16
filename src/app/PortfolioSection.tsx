@@ -5,11 +5,18 @@ import Image from "next/image";
 
 const entries = [
   {
+    title: "A Drawn Testimony",
+    images: ["/drawn-testimony.jpeg"],
+    caption:
+      "We retell Steen Metz's journey as Holocaust survivor through this interactive visual experience, where hand-drawn illustrations 'reimagine' his memories and guide you through the story to witness, to explore, and to remember. 2026",
+    links: ["https://drawn-testimony.github.io"],
+  },
+  {
     title: "Ferramonti 3D",
     images: ["/IMG_1230.jpeg", "/ferramonti Large.jpeg"],
     caption:
       "This interactively digitized photobook by a female inmate photographing the camp life and customs tells stories on the circumstances in the Ferramonti internment camp in Italy and makes them more tangible through the use of historical 3D reconstruction and interactive storytelling methods. 2025",
-    links: ["https://ferramonti-3d.memorise.sdu.dk/"],
+    links: ["https://ferramonti-3d.memorise.sdu.dk"],
   },
   {
     title: "Santa Clara 3D",
@@ -17,7 +24,7 @@ const entries = [
     caption:
       "This digital platform lets users move through 3D reconstructions, 360-degree images, and archival material to see how the Santa Clara site changed from a convent to a Francoist camp and finally to its current state. Interactive markers invite exploration, showing how digital tools can support public memory and can be adapted for other erased or overlooked places. 2025",
     links: [
-      "http://history-of-soria-360.memorise.sdu.dk/",
+      "http://history-of-soria-360.memorise.sdu.dk",
       "Santa_Clara_3D_CHIRA_2025.pdf",
     ],
   },
@@ -27,6 +34,22 @@ const entries = [
     caption:
       "The interactive prisoner art explorer allows you to inspect details in a watercolor painting of a perspective view of the Bergen-Belsen Concentration Camp and offers a guided storytelling tour through the various details of the painting. This is currently exhibited at the memorial of Bergen-Belsen, Germany. 2024",
     links: ["https://memoriseeu.github.io"],
+  },
+  {
+    title: "MusEcology",
+    images: ["/musecology.jpeg"],
+    caption:
+      "An interactive visualization and decision-support system that reveals the complex relationships between musical instruments, natural materials, global trade, and endangered ecosystems, supporting interdisciplinary research and more sustainable instrument making by bringing together many different datasets via inter-connected, domain-specific visualization for a variety of user groups. 2024",
+    links: ["https://musecology.kusnick.com"],
+  },
+  {
+    title: "InTaVia: In/Tangible European Heritage",
+    images: ["/intavia1.jpeg", "/intavia2.jpeg"],
+    caption:
+      "An integrated platform for researching European cultural heritage that lets users find and curate data about people, objects, and organizations, explore it through maps, timelines, sets, and networks, and transform the results into interactive multimedia stories. 2024",
+    links: [
+      "https://intavia.acdh-dev.oeaw.ac.at/",
+    ],
   },
   {
     title: "The Building History of the Vienna Hofburg",
