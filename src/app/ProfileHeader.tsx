@@ -20,7 +20,7 @@ type SectionLink = {
 
 const contactLinks: ContactLink[] = [
   {
-    href: "mailto:jakob@kusnick.com",
+    href: "mailto:jakob.kusnick@uib.no",
     label: "Mail",
     icon: <EnvelopeIcon className="size-5" />,
   },

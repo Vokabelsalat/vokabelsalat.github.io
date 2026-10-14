@@ -4,6 +4,17 @@ import { Position } from "./types";
 
 export const extras: Position[] = [
   {
+    title: "Area Chair at Digital Heritage of European Conflicts Conference 2026",
+    institution: "University of Southern Denmark",
+    location: "Odense, Denmark",
+    period: "25.-26. Sep. 2026",
+    details: ["Data Visualization & Storytelling"
+    ],
+    type: "range",
+    start: new Date("2026-09-24"),
+    end: new Date("2026-09-25"),
+  },
+  {
     title: "Reviewer for Journals and Conferences",
     institution: "University of Bergen",
     location: "Bergen, Norway",

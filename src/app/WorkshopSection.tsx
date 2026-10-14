@@ -74,6 +74,20 @@ export const workshops: Workshop[] = [
   //   },
   //   // Johannes Liem, Jakob Kusnick, Steffan Jänicke, Carina Doppler, Markus Passecker, Eva Mayr, Florian Windhager Data Driven Storytelling zu kulturellen Objekten und Biographien 14.3.2023 Luxemburg
   {
+    title: "The Fishbowl Leaks",
+    institution: "Part of the After Virtual Reality Exhibition 2026, 15.-21. Oct. 2026",
+    authors: "J. Kusnick",
+    location: "Bergen, Norway",
+    date: "15.-21. Oct. 2026",
+    details: [
+      "Augmented Reality Installation"
+    ],
+    link: "https://youtu.be/IxPzYrJ2wqw",
+    type: "range",
+    start: new Date("2026-10-15"),
+    end: new Date("2026-10-21"),
+  },
+  {
     title: "Seeing Stories Think: Visual Interfaces for Understanding Algorithmic Storytelling",
     institution: "Part of the Digital Humanities Conference 2026, 27.-31. Jul. 2026",
     authors: "J. Kusnick",

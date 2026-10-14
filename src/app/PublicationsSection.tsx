@@ -24,12 +24,39 @@ export const publications: Publication[] = [
   },
   {
     title:
+      "Connecting the Algae Value Chain Visually: Integrating Farming, Processing, and Product Views",
+    year: "2026",
+    authors:
+      "J. Kusnick, and T. Yousef",
+    reference: "EnvirVis 2026 - Workshop on Visualisation in Environmental Sciences",
+    doi: "https://doi.org/10.2312/envir.20261005",
+  },
+  {
+    title:
       "A Survey on Visualization-based Storytelling in Digital Humanities and Cultural Heritage",
     year: "2026",
     authors:
       "J. Kusnick, N. S. Andersen, J. Liem, E. Mayr, S. Beck, S. Koch, C. Doppler, K. Seirafi, S. Jänicke, and F. Windhager",
     reference: "Visual Informatics 10 (2), 2026",
     doi: "https://doi.org/10.1016/j.visinf.2026.100312",
+  },
+  {
+    title:
+      "Interactive Visualization of the Changing Light Environment in the Arctic Ocean",
+    year: "2025",
+    authors:
+      "E.B. Sørensen, J. Kusnick, K. Attard, and S. Jänicke",
+    reference: "CHIRA 2025 – Computer-Human Interaction Research and Applications.",
+    doi: "https://doi.org/10.1007/978-3-032-16454-4_18",
+  },
+  {
+    title:
+      "Santa Clara 3D: Digital Reconstruction and Storytelling of a Francoist Concentration Camp",
+    year: "2025",
+    authors:
+      "S. Zacho, C. Hall, J. Kusnick, and S. Jänicke",
+    reference: "CHIRA 2025 – Computer-Human Interaction Research and Applications.",
+    doi: "https://doi.org/10.1007/978-3-032-16454-4_18",
   },
   {
     title:
@@ -82,6 +109,16 @@ export const publications: Publication[] = [
     reference:
       "Workshop on Visualisation in Environmental Sciences (EnvirVis), The Eurographics Association",
     doi: "https://doi.org/10.2312/envirvis.20231112",
+  },
+  {
+    title:
+      "The African blackwood tree, music cultures and carving traditions. A plea for a telecoupled culturalecological transformation",
+    year: "2023",
+    authors:
+      "S. Lichtenberg, U. Nehren, J. Kusnick, and E. Huber-Sannwald",
+    reference:
+      "Journal of Cultural Management and Cultural Policy",
+    doi: "https://doi.org/10.14361/zkmm-2023-0206",
   },
   {
     title:

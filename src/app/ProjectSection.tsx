@@ -3,14 +3,15 @@ import * as React from "react";
 import { Position } from "./types";
 import Link from "next/link";
 
-const teachings: Position[] = [
+export const projects: Position[] = [
   {
     title: "Narrative Nubs",
     institution: "University of Bergen",
     location: "Bergen, Norway",
     period: "Jan. 2026 - now",
     details: ["Hosted by Prof. Nick Montfort"],
-    link: "https://codeberg.org/nickmontfort/narrative-nubs",
+    links: ["https://codeberg.org/nickmontfort/narrative-nubs",
+      "https://nubs.kusnick.com"],
     type: "range",
     start: new Date(2026, 0, 1),
     end: new Date(),
@@ -21,7 +22,7 @@ const teachings: Position[] = [
     location: "Odense, Denmark",
     period: "Jul. 2025 - Dec. 2025",
     details: ["Hosted by Prof. Tariq Yousef"],
-    link: "https://algaeprobanos.eu",
+    links: ["https://algaeprobanos.eu"],
     type: "range",
     start: new Date(2025, 6, 1),
     end: new Date(2025, 12, 31),
@@ -32,7 +33,7 @@ const teachings: Position[] = [
     location: "Odense, Denmark",
     period: "Nov. 2023 - Dec. 2025",
     details: ["Hosted by Prof. Stefan Jänicke"],
-    link: "https://memorise.sdu.dk",
+    links: ["https://memorise.sdu.dk"],
     type: "range",
     start: new Date(2023, 10, 1),
     end: new Date(2025, 12, 31),
@@ -42,7 +43,7 @@ const teachings: Position[] = [
     institution: "University of Southern Denmark",
     location: "Odense, Denmark",
     period: "Nov. 2019 - now",
-    link: "https://musecology.kusnick.com",
+    links: ["https://musecology.kusnick.com"],
     type: "range",
     start: new Date(2019, 10, 1),
     end: new Date(),
@@ -54,7 +55,7 @@ const teachings: Position[] = [
     location: "Odense, Denmark",
     period: "Oct. 2020 – Oct. 2023",
     details: ["Hosted by Prof. Stefan Jänicke"],
-    link: "https://intavia.eu",
+    links: ["https://intavia.eu"],
     type: "range",
     start: new Date(2020, 9, 1),
     end: new Date(2023, 9, 1),
@@ -65,7 +66,7 @@ const teachings: Position[] = [
     location: "Leipzig, Germany",
     period: "Feb. 2018 – Jul. 2020",
     details: ["Hosted by Prof. Josef Focht"],
-    link: "https://mfm.uni-leipzig.de/dt/Forschung/Tastenprojekt.php",
+    links: ["https://mfm.uni-leipzig.de/dt/Forschung/Tastenprojekt.php"],
     type: "range",
     start: new Date(2018, 1, 1),
     end: new Date(2020, 6, 1),
@@ -77,17 +78,17 @@ export const ProjectSection: React.FC = () => {
     <section className="flex overflow-hidden flex-col px-6 py-2.5 w-full text-content max-md:px-5 max-md:max-w-full">
       <h2 className="gap-2.5 self-start text-lg font-[Montserrat]">Projects</h2>
       <div className="w-full text-xs max-md:max-w-full">
-        {teachings.map((teaching, index) => (
+        {projects.map((project, index) => (
           <article key={index} className="py-2 w-full max-md:max-w-full">
             <div className="flex overflow-hidden flex-wrap gap-10 justify-between items-start w-full min-h-4 max-md:max-w-full">
-              <h3 className="font-bold">{teaching.title}</h3>
-              <p>{teaching.period}</p>
+              <h3 className="font-bold">{project.title}</h3>
+              <p>{project.period}</p>
             </div>
             <div className="flex overflow-hidden flex-wrap gap-10 justify-between items-start w-full max-md:max-w-full mt-1">
-              <p>{teaching.institution}</p>
-              <p>{teaching.location}</p>
+              <p>{project.institution}</p>
+              <p>{project.location}</p>
             </div>
-            {teaching.details?.map((detail, detailIndex) => (
+            {project.details?.map((detail, detailIndex) => (
               <p
                 key={detailIndex}
                 className="overflow-hidden w-full max-md:max-w-full italic mt-0.5"
@@ -95,16 +96,16 @@ export const ProjectSection: React.FC = () => {
                 {detail}
               </p>
             ))}
-            {teaching.link && (
+            {(project.links ?? (project.link ? [project.link] : [])).map((link) => (
               <Link
+                key={link}
                 target="_blank"
-                href={teaching.link}
-                className="text-link hover:text-link-hover"
-              // className="overflow-hidden w-full max-md:max-w-full italic mt-0.5"
+                href={link}
+                className="block w-fit break-all text-link hover:text-link-hover"
               >
-                {teaching.link}
+                {link}
               </Link>
-            )}
+            ))}
           </article>
         ))}
       </div>

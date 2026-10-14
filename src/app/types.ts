@@ -28,6 +28,7 @@ export interface Position extends Event {
   period: string;
   details?: string[];
   link?: string;
+  links?: string[];
 }
 
 export interface Workshop extends Event {

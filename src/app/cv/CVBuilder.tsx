@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { extras } from "../ExtracurricularSection";
 import { positions } from "../PositionsSection";
+import { projects } from "../ProjectSection";
 import { publications } from "../PublicationsSection";
 import { teachings } from "../TeachingSection";
 import { ThemeToggle } from "../ThemeToggle";
@@ -18,7 +19,7 @@ type CVItem = {
   date: string;
   lines: string[];
   details?: string[];
-  link?: string;
+  links?: string[];
 };
 
 type CVSection = {
@@ -49,7 +50,7 @@ const sections: CVSection[] = [
       date: item.period,
       lines: [`${item.institution} · ${item.location}`],
       details: item.details,
-      link: item.link,
+      links: item.link ? [item.link] : undefined,
     })),
   },
   {
@@ -60,7 +61,19 @@ const sections: CVSection[] = [
       title: item.title,
       date: item.year,
       lines: [item.authors, item.reference],
-      link: item.doi,
+      links: item.doi ? [item.doi] : undefined,
+    })),
+  },
+  {
+    id: "projects",
+    title: "Projects",
+    items: projects.map((item, index) => ({
+      id: `projects-${index}`,
+      title: item.title,
+      date: item.period,
+      lines: [`${item.institution} · ${item.location}`],
+      details: item.details,
+      links: item.links ?? (item.link ? [item.link] : undefined),
     })),
   },
   {
@@ -83,7 +96,7 @@ const sections: CVSection[] = [
       date: item.date,
       lines: [item.authors || "", `${item.institution} · ${item.location}`].filter(Boolean),
       details: item.details,
-      link: item.link,
+      links: item.link ? [item.link] : undefined,
     })),
   },
   {
@@ -125,9 +138,8 @@ function Checkbox({ checked, label, onChange }: { checked: boolean; label: strin
       className="group flex w-full items-start gap-3 text-left cursor-pointer"
     >
       <span
-        className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded border transition-colors ${
-          checked ? "border-content bg-content text-surface" : "border-line bg-surface group-hover:border-content-muted"
-        }`}
+        className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded border transition-colors ${checked ? "border-content bg-content text-surface" : "border-line bg-surface group-hover:border-content-muted"
+          }`}
         aria-hidden="true"
       >
         {checked && <CheckIcon className="size-3.5 stroke-3" />}
@@ -146,15 +158,15 @@ export function CVBuilder() {
   const previewPages = useMemo<PreviewPage[]>(() => {
     const textLines = (text: string, charactersPerLine: number) => Math.max(1, Math.ceil(text.length / charactersPerLine));
     const itemSize = (item: CVItem) =>
-      1.2 +
-      textLines(item.title, 72) +
-      item.lines.reduce((total, line) => total + textLines(line, 88), 0) +
-      (item.details?.reduce((total, detail) => total + textLines(detail, 84), 0) || 0) +
-      (item.link?.startsWith("http") ? 1 : 0);
+      0.3 +
+      textLines(item.title, 90) +
+      item.lines.reduce((total, line) => total + textLines(line, 115), 0) +
+      (item.details?.reduce((total, detail) => total + textLines(detail, 105), 0) || 0) +
+      (item.links?.filter((link) => link.startsWith("http")).length || 0) * 0.6;
 
     const pages: PreviewPage[] = [{ sections: [] }];
     let currentPage = pages[0];
-    let remaining = selected.has("profile-bio") ? 24 : 33;
+    let remaining = selected.has("profile-bio") ? 45 : 58;
     let pageHasBodyContent = selected.has("profile-bio");
 
     selectedSections.forEach((section) => {
@@ -162,12 +174,12 @@ export function CVBuilder() {
 
       section.items.forEach((item) => {
         const size = itemSize(item);
-        const required = size + (currentPageSection ? 0 : 2.7);
+        const required = size + (currentPageSection ? 0 : 1.5);
 
         if (required > remaining && pageHasBodyContent) {
           currentPage = { sections: [] };
           pages.push(currentPage);
-          remaining = 40;
+          remaining = 65;
           pageHasBodyContent = false;
           currentPageSection = null;
         }
@@ -175,7 +187,7 @@ export function CVBuilder() {
         if (!currentPageSection) {
           currentPageSection = { ...section, items: [] };
           currentPage.sections.push(currentPageSection);
-          remaining -= 2.7;
+          remaining -= 1.5;
         }
 
         currentPageSection.items.push(item);
@@ -218,15 +230,15 @@ export function CVBuilder() {
     }
 
     const doc = new jsPDF({ unit: "mm", format: "a4" });
-    const left = 20;
-    const right = 190;
+    const left = 14;
+    const right = 196;
     const bodyWidth = right - left;
-    const bottom = 282;
-    let y = 20;
+    const bottom = 287;
+    let y = 14;
 
     const addPage = () => {
       doc.addPage();
-      y = 18;
+      y = 14;
     };
 
     const ensureRoom = (height: number) => {
@@ -242,74 +254,77 @@ export function CVBuilder() {
 
     doc.setTextColor(23, 23, 23);
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(21);
+    doc.setFontSize(19);
     doc.text("Jakob Kusnick", left, y);
-    if (photoData) doc.addImage(photoData, "JPEG", 166, 17, 24, 24);
-    y += 7;
+    if (photoData) doc.addImage(photoData, "JPEG", 174, 14, 22, 22);
+    y += 5.5;
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
+    doc.setFontSize(9);
     doc.text("Postdoctoral Research Fellow · Center for Digital Narrative · University of Bergen", left, y);
-    y += 5;
+    y += 4.2;
     doc.setTextColor(45, 105, 170);
-    doc.textWithLink("jakob@kusnick.com", left, y, { url: "mailto:jakob@kusnick.com" });
-    doc.textWithLink("ORCID: 0000-0002-1653-6614", left + 43, y, { url: "https://orcid.org/0000-0002-1653-6614" });
-    doc.textWithLink("Google Scholar", left + 104, y, { url: "https://scholar.google.de/citations?user=9A5PfmYAAAAJ" });
-    y = photoData ? 46 : y + 7;
+    doc.setFontSize(8.5);
+    doc.textWithLink("jakob.kusnick@uib.no", left, y, { url: "mailto:jakob.kusnick@uib.no" });
+    doc.textWithLink("ORCID: 0000-0002-1653-6614", left + 44, y, { url: "https://orcid.org/0000-0002-1653-6614" });
+    doc.textWithLink("Google Scholar", left + 109, y, { url: "https://scholar.google.de/citations?user=9A5PfmYAAAAJ" });
+    y += 3.7;
+    doc.textWithLink("Full CV: kusnick.com", left, y, { url: "https://kusnick.com" });
+    y = photoData ? 40 : y + 5.5;
     doc.setDrawColor(190, 190, 190);
     doc.line(left, y, right, y);
-    y += 7;
+    y += 4.5;
 
     if (includeBio) {
       doc.setTextColor(23, 23, 23);
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(13);
+      doc.setFontSize(11.5);
       doc.text("Profile", left, y);
-      y += 6;
+      y += 4.5;
       doc.setFont("helvetica", "normal");
-      doc.setFontSize(9.5);
-      writeWrapped(shortBio, left, bodyWidth, 4.2);
-      y += 5;
+      doc.setFontSize(8.5);
+      writeWrapped(shortBio, left, bodyWidth, 3.6);
+      y += 3;
     }
 
     selectedSections.forEach((section) => {
-      ensureRoom(18);
+      ensureRoom(14);
       doc.setTextColor(23, 23, 23);
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(13);
+      doc.setFontSize(11.5);
       doc.text(section.title, left, y);
-      y += 6;
+      y += 4.5;
 
       section.items.forEach((item) => {
-        const estimatedLines = doc.splitTextToSize(item.title, 128).length + item.lines.reduce((sum, line) => sum + doc.splitTextToSize(line, bodyWidth).length, 0) + (item.details?.length || 0);
-        ensureRoom(Math.max(13, estimatedLines * 4 + 5));
+        const estimatedLines = doc.splitTextToSize(item.title, 128).length + item.lines.reduce((sum, line) => sum + doc.splitTextToSize(line, bodyWidth).length, 0) + (item.details?.length || 0) + (item.links?.filter((link) => link.startsWith("http")).length || 0);
+        ensureRoom(Math.max(10.5, estimatedLines * 3.4 + 3.5));
         doc.setTextColor(23, 23, 23);
-        doc.setFontSize(10);
+        doc.setFontSize(9);
         doc.setFont("helvetica", "bold");
-        const dateWidth = 36;
+        const dateWidth = 34;
         const titleLines = doc.splitTextToSize(item.title, bodyWidth - dateWidth) as string[];
         doc.text(titleLines, left, y);
         doc.setFont("helvetica", "normal");
-        doc.setFontSize(9);
+        doc.setFontSize(8.3);
         doc.text(item.date, right, y, { align: "right" });
-        y += titleLines.length * 4.2;
+        y += titleLines.length * 3.6;
 
-        doc.setFontSize(9);
-        item.lines.forEach((line) => writeWrapped(line, left, bodyWidth, 3.8));
+        doc.setFontSize(8.3);
+        item.lines.forEach((line) => writeWrapped(line, left, bodyWidth, 3.4));
         item.details?.forEach((detail) => {
           doc.setTextColor(75, 75, 75);
-          writeWrapped(detail, left + 3, bodyWidth - 3, 3.8, "italic");
+          writeWrapped(detail, left + 3, bodyWidth - 3, 3.4, "italic");
         });
-        if (item.link?.startsWith("http")) {
+        item.links?.filter((link) => link.startsWith("http")).forEach((link) => {
           doc.setTextColor(45, 105, 170);
           doc.setFont("helvetica", "normal");
-          doc.setFontSize(8.5);
-          const displayLink = item.link.replace(/^https?:\/\/(dx\.)?doi\.org\//, "doi: ").replace(/^https?:\/\//, "");
-          doc.textWithLink(displayLink, left, y, { url: item.link });
-          y += 3.8;
-        }
-        y += 3;
+          doc.setFontSize(8);
+          const displayLink = link.replace(/^https?:\/\/(dx\.)?doi\.org\//, "doi: ").replace(/^https?:\/\//, "");
+          doc.textWithLink(displayLink, left, y, { url: link });
+          y += 3.3;
+        });
+        y += 1.8;
       });
-      y += 2;
+      y += 1;
     });
 
     const totalPages = doc.getNumberOfPages();
@@ -318,7 +333,7 @@ export function CVBuilder() {
       doc.setTextColor(120, 120, 120);
       doc.setFont("helvetica", "normal");
       doc.setFontSize(8);
-      doc.text(`${page} / ${totalPages}`, right, 290, { align: "right" });
+      doc.text(`${page} / ${totalPages}`, right, 292, { align: "right" });
     }
 
     doc.save("Jakob-Kusnick-academic-CV.pdf");
@@ -366,12 +381,19 @@ export function CVBuilder() {
     ];
 
     const identityParagraphs = [
-      new Paragraph({ text: "Jakob Kusnick", heading: HeadingLevel.TITLE, spacing: { after: 80 } }),
+      new Paragraph({ text: "Jakob Kusnick", heading: HeadingLevel.TITLE, spacing: { after: 40 } }),
       new Paragraph({
         children: [new TextRun("Postdoctoral Research Fellow · Center for Digital Narrative · University of Bergen")],
-        spacing: { after: 100 },
+        spacing: { after: 50 },
       }),
-      new Paragraph({ children: contactRuns, spacing: { after: 120 } }),
+      new Paragraph({ children: contactRuns, spacing: { after: 20 } }),
+      new Paragraph({
+        children: [new ExternalHyperlink({
+          link: "https://kusnick.com",
+          children: [new TextRun({ text: "Full CV: kusnick.com", style: "Hyperlink" })],
+        })],
+        spacing: { after: 60 },
+      }),
     ];
 
     if (includePhoto) {
@@ -389,13 +411,13 @@ export function CVBuilder() {
               width: { size: 18, type: WidthType.PERCENTAGE },
               children: [new Paragraph({
                 alignment: AlignmentType.RIGHT,
-                children: [new ImageRun({ data: photo, type: "jpg", transformation: { width: 96, height: 96 } })],
+                children: [new ImageRun({ data: photo, type: "jpg", transformation: { width: 84, height: 84 } })],
               })],
             }),
           ],
         })],
       }));
-      children.push(new Paragraph({ spacing: { after: 40 } }));
+      children.push(new Paragraph({ spacing: { after: 20 } }));
     } else {
       children.push(...identityParagraphs);
     }
@@ -403,7 +425,7 @@ export function CVBuilder() {
     if (includeBio) {
       children.push(
         new Paragraph({ text: "Profile", heading: HeadingLevel.HEADING_1, keepNext: true }),
-        new Paragraph({ text: shortBio, spacing: { after: 180, line: 276 } }),
+        new Paragraph({ text: shortBio, spacing: { after: 100, line: 240 } }),
       );
     }
 
@@ -411,31 +433,34 @@ export function CVBuilder() {
       children.push(new Paragraph({ text: section.title, heading: HeadingLevel.HEADING_1, keepNext: true }));
       section.items.forEach((item) => {
         const itemParagraphs = [new Paragraph({
-          spacing: { before: 80, after: 40 },
+          spacing: { before: 40, after: 20 },
           children: [
             new TextRun({ text: item.title, bold: true }),
             new TextRun({ text: ` — ${item.date}` }),
           ],
         })];
-        item.lines.forEach((line) => itemParagraphs.push(new Paragraph({ text: line, spacing: { after: 20 } })));
+        item.lines.forEach((line) => itemParagraphs.push(new Paragraph({ text: line, spacing: { after: 10 } })));
         item.details?.forEach((detail) => itemParagraphs.push(new Paragraph({
           children: [new TextRun({ text: detail, italics: true, color: "555555" })],
           indent: { left: 180 },
-          spacing: { after: 20 },
+          spacing: { after: 10 },
         })));
-        if (item.link?.startsWith("http")) {
-          const displayLink = item.link.replace(/^https?:\/\/(dx\.)?doi\.org\//, "doi: ");
-          itemParagraphs.push(new Paragraph({
-            children: [new ExternalHyperlink({
-              link: item.link,
-              children: [new TextRun({ text: displayLink, style: "Hyperlink" })],
-            })],
-          }));
+        const itemLinks = item.links?.filter((link) => link.startsWith("http")) || [];
+        if (itemLinks.length) {
+          itemLinks.forEach((link) => {
+            const displayLink = link.replace(/^https?:\/\/(dx\.)?doi\.org\//, "doi: ");
+            itemParagraphs.push(new Paragraph({
+              children: [new ExternalHyperlink({
+                link,
+                children: [new TextRun({ text: displayLink, style: "Hyperlink" })],
+              })],
+            }));
+          });
         } else {
-          itemParagraphs.push(new Paragraph({ spacing: { after: 50 } }));
+          itemParagraphs.push(new Paragraph({ spacing: { after: 20 } }));
         }
         children.push(...itemParagraphs);
-        children.push(new Paragraph({ spacing: { after: 70 } }));
+        children.push(new Paragraph({ spacing: { after: 30 } }));
       });
     });
 
@@ -445,23 +470,23 @@ export function CVBuilder() {
       description: "Academic curriculum vitae generated from selected entries.",
       styles: {
         default: {
-          document: { run: { font: "Arial", size: 20, color: "171717" }, paragraph: { spacing: { line: 252 } } },
-          title: { run: { font: "Arial", size: 40, bold: true, color: "000000" }, paragraph: { spacing: { after: 80 } } },
-          heading1: { run: { font: "Arial", size: 26, bold: true, color: "000000" }, paragraph: { spacing: { before: 220, after: 100 } } },
+          document: { run: { font: "Arial", size: 18, color: "171717" }, paragraph: { spacing: { line: 228 } } },
+          title: { run: { font: "Arial", size: 36, bold: true, color: "000000" }, paragraph: { spacing: { after: 40 } } },
+          heading1: { run: { font: "Arial", size: 23, bold: true, color: "000000" }, paragraph: { spacing: { before: 140, after: 60 } } },
         },
       },
       sections: [{
         properties: {
           page: {
             size: { width: 11906, height: 16838 },
-            margin: { top: 1134, right: 1134, bottom: 1134, left: 1134 },
+            margin: { top: 794, right: 794, bottom: 794, left: 794 },
           },
         },
         footers: {
           default: new Footer({
             children: [new Paragraph({
               alignment: AlignmentType.RIGHT,
-              children: [new TextRun({ children: [PageNumber.CURRENT, " / ", PageNumber.TOTAL_PAGES], size: 16, color: "777777" })],
+              children: [new TextRun({ children: [PageNumber.CURRENT, " / ", PageNumber.TOTAL_PAGES], size: 15, color: "777777" })],
             })],
           }),
         },
@@ -580,18 +605,19 @@ export function CVBuilder() {
 
           <div className="space-y-6">
             {previewPages.map((page, pageIndex) => (
-              <article key={pageIndex} className="cv-paper relative overflow-hidden bg-white px-[8%] py-[7%] text-neutral-900 shadow-lg">
+              <article key={pageIndex} className="cv-paper relative overflow-hidden bg-white px-[5.5%] py-[5.5%] text-neutral-900 shadow-lg">
                 {pageIndex === 0 && (
-                  <header className="border-b border-neutral-300 pb-[3%]">
-                    <div className="flex items-start justify-between gap-[5%]">
+                  <header className="border-b border-neutral-300 pb-[2%]">
+                    <div className="flex items-start justify-between gap-[4%]">
                       <div>
-                        <h2 className="font-[Montserrat] text-[clamp(1.2rem,3vw,1.875rem)] font-bold tracking-tight">Jakob Kusnick</h2>
-                        <p className="mt-[1%] text-[clamp(0.5rem,1.25vw,0.875rem)] leading-relaxed">Postdoctoral Research Fellow · Center for Digital Narrative · University of Bergen</p>
-                        <div className="mt-[3%] flex flex-wrap gap-x-[4%] gap-y-1 text-[clamp(0.5rem,1.05vw,0.75rem)] text-blue-700">
-                          <a href="mailto:jakob@kusnick.com">jakob@kusnick.com</a>
+                        <h2 className="font-[Montserrat] text-[clamp(1.1rem,2.7vw,1.7rem)] font-bold tracking-tight">Jakob Kusnick</h2>
+                        <p className="mt-[0.5%] text-[clamp(0.48rem,1.1vw,0.8rem)] leading-snug">Postdoctoral Research Fellow · Center for Digital Narrative · University of Bergen</p>
+                        <div className="mt-[2%] flex flex-wrap gap-x-[4%] gap-y-0.5 text-[clamp(0.46rem,0.95vw,0.7rem)] text-blue-700">
+                          <a href="mailto:jakob.kusnick@uib.no">jakob.kusnick@uib.no</a>
                           <a href="https://orcid.org/0000-0002-1653-6614">ORCID: 0000-0002-1653-6614</a>
                           <a href="https://scholar.google.de/citations?user=9A5PfmYAAAAJ">Google Scholar</a>
                         </div>
+                        <a href="https://kusnick.com" className="mt-[0.5%] block text-[clamp(0.46rem,0.95vw,0.7rem)] text-blue-700">Full CV: kusnick.com</a>
                       </div>
                       {selected.has("profile-photo") && (
                         <Image
@@ -599,7 +625,7 @@ export function CVBuilder() {
                           width={112}
                           height={112}
                           alt="Jakob Kusnick"
-                          className="size-[clamp(3.5rem,10vw,7rem)] shrink-0 rounded object-cover"
+                          className="size-[clamp(3.25rem,8vw,6rem)] shrink-0 rounded object-cover"
                         />
                       )}
                     </div>
@@ -607,26 +633,30 @@ export function CVBuilder() {
                 )}
 
                 {selected.size ? (
-                  <div className={`${pageIndex === 0 ? "pt-[4%]" : ""} space-y-[3%]`}>
+                  <div className={`${pageIndex === 0 ? "pt-[2%]" : ""} space-y-[1.1%]`}>
                     {pageIndex === 0 && selected.has("profile-bio") && (
                       <section>
-                        <h3 className="mb-[1.5%] font-[Montserrat] text-[clamp(0.65rem,1.5vw,1.125rem)] font-bold">Profile</h3>
-                        <p className="text-[clamp(0.48rem,1vw,0.75rem)] leading-relaxed">{shortBio}</p>
+                        <h3 className="mb-[0.5%] font-[Montserrat] text-[clamp(0.58rem,1.2vw,0.9rem)] font-bold">Profile</h3>
+                        <p className="text-[clamp(0.44rem,0.82vw,0.625rem)] leading-[1.25]">{shortBio}</p>
                       </section>
                     )}
                     {page.sections.map((section) => (
                       <section key={`${pageIndex}-${section.id}`}>
-                        <h3 className="mb-[1.5%] font-[Montserrat] text-[clamp(0.65rem,1.5vw,1.125rem)] font-bold">{section.title}</h3>
-                        <div className="space-y-[1.7%]">
+                        <h3 className="mb-[0.5%] font-[Montserrat] text-[clamp(0.58rem,1.2vw,0.9rem)] font-bold">{section.title}</h3>
+                        <div className="space-y-[0.55%]">
                           {section.items.map((item) => (
-                            <article key={item.id} className="text-[clamp(0.48rem,1vw,0.75rem)] leading-relaxed">
+                            <article key={item.id} className="text-[clamp(0.44rem,0.82vw,0.625rem)] leading-[1.25]">
                               <div className="grid grid-cols-[1fr_auto] gap-[4%]">
                                 <h4 className="font-bold">{item.title}</h4>
                                 <p className="whitespace-nowrap">{item.date}</p>
                               </div>
                               {item.lines.map((line) => <p key={line}>{line}</p>)}
                               {item.details?.map((detail) => <p key={detail} className="italic text-neutral-600">{detail}</p>)}
-                              {item.link?.startsWith("http") && <a href={item.link} className="break-all text-blue-700">{item.link.replace(/^https?:\/\/(dx\.)?doi\.org\//, "doi: ")}</a>}
+                              {item.links?.filter((link) => link.startsWith("http")).map((link) => (
+                                <a key={link} href={link} className="block break-all text-blue-700">
+                                  {link.replace(/^https?:\/\/(dx\.)?doi\.org\//, "doi: ")}
+                                </a>
+                              ))}
                             </article>
                           ))}
                         </div>

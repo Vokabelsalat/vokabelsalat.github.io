@@ -5,11 +5,18 @@ import Image from "next/image";
 
 const entries = [
   {
+    title: "The Fishbowl Leaks",
+    images: ["https://youtu.be/IxPzYrJ2wqw"],
+    caption:
+      "The Fishbowl Leaks is a participatory virtual aquarium. Through browser-based augmented reality users create evolving marine creatures, shaping their own generative narratives. These creatures enter a shared aquarium, gradually disrupting its initially ordered and classified structure. 2026",
+    links: ["https://aar.kusnick.com", "https://aar.kusnick.com/collective"],
+  },
+  {
     title: "A Drawn Testimony",
     images: ["/drawn-testimony.jpeg"],
     caption:
       "We retell Steen Metz's journey as Holocaust survivor through this interactive visual experience, where hand-drawn illustrations 'reimagine' his memories and guide you through the story to witness, to explore, and to remember. 2026",
-    links: ["https://drawn-testimony.github.io"],
+    links: ["https://experimental-drawn-testimony.github.io/"],
   },
   {
     title: "Ferramonti 3D",
@@ -81,6 +88,13 @@ const entries = [
   },
 ];
 
+const getYouTubeId = (url: string): string | null => {
+  const match = url.match(
+    /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/
+  );
+  return match ? match[1] : null;
+};
+
 export const PortfolioSection: React.FC = () => {
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
 
@@ -95,6 +109,35 @@ export const PortfolioSection: React.FC = () => {
                 {/* Image Container */}
                 <div className="relative w-full h-full max-h-full gap-2 flex overflow-hidden items-start">
                   {e.images.map((img, img_i) => {
+                    const youTubeId = getYouTubeId(img);
+                    if (youTubeId) {
+                      return (
+                        <div
+                          key={`imgage-${img_i}`}
+                          className="relative max-h-[400px] flex items-start cursor-zoom-in hover:animate-pulse"
+                          onClick={() => setSelectedImage(img)}
+                        >
+                          <Image
+                            src={`https://img.youtube.com/vi/${youTubeId}/sddefault.jpg`}
+                            width={640}
+                            height={360}
+                            style={{
+                              width: "640px",
+                              height: "auto",
+                              aspectRatio: "16 / 9",
+                              maxHeight: "400px",
+                            }}
+                            className="object-cover max-w-full"
+                            alt={e.caption}
+                          />
+                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <div className="w-12 h-12 rounded-full bg-[#000000aa] flex items-center justify-center">
+                              <div className="ml-1 w-0 h-0 border-y-[10px] border-y-transparent border-l-[16px] border-l-white" />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    }
                     return (
                       <div
                         key={`imgage-${img_i}`}
@@ -145,14 +188,28 @@ export const PortfolioSection: React.FC = () => {
           className="fixed inset-0 bg-[#000000ba] bg-opacity-80 flex items-center justify-center p-4 z-50"
           onClick={() => setSelectedImage(null)}
         >
-          <div className="relative max-w-4xl w-[90vw] h-[90vh]">
-            <Image
-              src={selectedImage}
-              fill={true}
-              alt="Fullscreen"
-              className="rounded-lg shadow-lg object-contain"
-            />
-          </div>
+          {getYouTubeId(selectedImage) ? (
+            <div className="relative max-w-4xl w-[90vw] aspect-video max-h-[90vh]">
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${getYouTubeId(
+                  selectedImage
+                )}?autoplay=1`}
+                title="YouTube video"
+                allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full rounded-lg shadow-lg"
+              />
+            </div>
+          ) : (
+            <div className="relative max-w-4xl w-[90vw] h-[90vh]">
+              <Image
+                src={selectedImage}
+                fill={true}
+                alt="Fullscreen"
+                className="rounded-lg shadow-lg object-contain"
+              />
+            </div>
+          )}
         </div>
       )}
     </section>
